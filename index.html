@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Homebuying Guide — 6 Months</title>
+<meta name="description" content="A six-month homebuying guide: three months of planning, two months of shopping, one month of closing — with a built-in research agent.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #faf7f0; color: #1c2420; line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: #166534; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 18px; }
+  header.hero {
+    background: #14532d; color: #f0fdf4; padding: 44px 0 34px;
+  }
+  header.hero h1 { font-size: 2rem; line-height: 1.2; letter-spacing: -0.01em; }
+  header.hero p.sub { margin-top: 10px; font-size: 1.02rem; color: #bbf7d0; max-width: 620px; }
+  .phases { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .phases span {
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+    border-radius: 999px; padding: 4px 12px; font-size: .85rem;
+  }
+  nav.toc {
+    position: sticky; top: 0; z-index: 10; background: rgba(250,247,240,.96);
+    border-bottom: 1px solid #e3ddd0; overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav.toc .wrap { display: flex; gap: 4px; padding-top: 8px; padding-bottom: 8px; }
+  nav.toc a {
+    text-decoration: none; color: #374151; font-size: .9rem; padding: 6px 10px;
+    border-radius: 8px; flex: 0 0 auto;
+  }
+  nav.toc a:hover, nav.toc a:focus { background: #e7e2d4; }
+  main { padding: 10px 0 30px; }
+  section.page { padding: 26px 0 6px; }
+  section.page > h2 {
+    font-size: 1.55rem; line-height: 1.25; color: #14532d;
+    border-bottom: 3px solid #d9c98a; padding-bottom: 8px; margin-bottom: 16px;
+  }
+  .card {
+    background: #fff; border: 1px solid #e3ddd0; border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 14px;
+  }
+  .card h3 { font-size: 1.08rem; margin-bottom: 8px; color: #1c2420; }
+  .card ul, .card ol { margin: 6px 0 6px 22px; }
+  .card li { margin: 3px 0; }
+  .card li ul { margin-top: 3px; }
+  .card p { margin: 6px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .95rem; }
+  th, td { border: 1px solid #d8d2c2; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f1ecdd; }
+  .tablewrap { overflow-x: auto; }
+  .videocard {
+    display: flex; gap: 12px; align-items: flex-start; text-decoration: none;
+    background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 12px; color: #1c2420;
+  }
+  .videocard:hover, .videocard:focus { border-color: #f97316; }
+  .videocard .play {
+    flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%;
+    background: #dc2626; color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; padding-left: 3px;
+  }
+  .videocard .vt { font-weight: 600; }
+  .videocard .vu { font-size: .82rem; color: #6b7280; word-break: break-all; }
+  .reslink { display: block; padding: 7px 0; border-bottom: 1px dashed #e3ddd0; text-decoration: none; }
+  .reslink:last-child { border-bottom: none; }
+  .reslink .rl { font-weight: 600; }
+  .reslink .ru { display: block; font-size: .82rem; color: #6b7280; word-break: break-all; font-weight: 400; }
+  /* Research agent */
+  section.agent {
+    background: #14532d; color: #f0fdf4; border-radius: 16px;
+    padding: 26px 22px; margin: 30px 0 10px;
+  }
+  section.agent h2 { font-size: 1.4rem; margin-bottom: 6px; color: #fff; border: none; padding: 0; }
+  section.agent p.lede { color: #bbf7d0; font-size: .95rem; margin-bottom: 16px; }
+  section.agent label { display: block; font-size: .88rem; font-weight: 600; margin: 14px 0 5px; }
+  section.agent input[type="password"], section.agent textarea {
+    width: 100%; border: 1px solid #4ade80; border-radius: 10px; padding: 11px 12px;
+    font: inherit; font-size: .95rem; background: #052e16; color: #f0fdf4;
+  }
+  section.agent textarea { min-height: 74px; resize: vertical; }
+  section.agent .note { font-size: .8rem; color: #86efac; margin-top: 5px; }
+  section.agent button {
+    margin-top: 16px; background: #facc15; color: #1c2420; border: none; cursor: pointer;
+    font: inherit; font-weight: 700; border-radius: 10px; padding: 12px 22px; min-height: 48px;
+  }
+  section.agent button:disabled { opacity: .55; cursor: wait; }
+  #agentStatus { margin-top: 14px; font-size: .92rem; }
+  #agentStatus.error { color: #fca5a5; }
+  #agentAnswer {
+    margin-top: 14px; background: #fff; color: #1c2420; border-radius: 12px;
+    padding: 18px 20px; display: none;
+  }
+  #agentAnswer h3 { font-size: 1.05rem; margin: 14px 0 6px; }
+  #agentAnswer h3:first-child { margin-top: 0; }
+  #agentAnswer ul, #agentAnswer ol { margin: 6px 0 6px 22px; }
+  #agentAnswer p { margin: 6px 0; }
+  #agentSources { margin-top: 12px; font-size: .85rem; }
+  #agentSources a { word-break: break-all; }
+  footer { padding: 26px 0 40px; color: #6b7280; font-size: .85rem; }
+  @media (max-width: 560px) {
+    header.hero h1 { font-size: 1.6rem; }
+    section.page > h2 { font-size: 1.3rem; }
+    .card { padding: 15px 16px; }
+    section.agent { padding: 22px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Homebuying Guide — 6 Months</h1>
+    <p class="sub">A step-by-step plan for buying a home in six months: three months of planning, two months of shopping, and one month of closing.</p>
+    <div class="phases">
+      <span>Planning — 3 months</span>
+      <span>Shopping — 2 months</span>
+      <span>Closing — 1 month</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Guide sections">
+  <div class="wrap">
+    <a href="#overview">Overview</a>
+    <a href="#planning">Planning</a>
+    <a href="#shopping">Shopping</a>
+    <a href="#closing">Closing</a>
+    <a href="#reading">Reading</a>
+    <a href="#calculators">Calculators</a>
+    <a href="#agent">Research Agent</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section class="page" id="overview">
+  <h2>Homebuying Guide - 6 Months</h2>
+
+  <div class="card">
+    <h3>3 Rules for HomeBuying</h3>
+    <ol>
+      <li>Plan to hold for 5 years or more
+        <ul>
+          <li><strong>Why</strong>: When home prices have dipped, that dip has been roughly about 5 years. That way you don’t lose money.</li>
+        </ul>
+      </li>
+      <li>Be comfortable in your budget</li>
+      <li>3 months expenses saved</li>
+    </ol>
+  </div>
+
+  <a class="videocard" href="https://www.youtube.com/watch?v=HfHNQWUoKdc" target="_blank" rel="noopener">
+    <span class="play">▶</span>
+    <span><span class="vt">First Time Home Buyer Q&amp;A</span><br>
+    <span class="vu">https://www.youtube.com/watch?v=HfHNQWUoKdc</span></span>
+  </a>
+
+  <a class="videocard" href="https://www.youtube.com/watch?v=CdZBMa0kJvA&amp;t=753s" target="_blank" rel="noopener">
+    <span class="play">▶</span>
+    <span><span class="vt">Watch</span><br>
+    <span class="vu">https://www.youtube.com/watch?v=CdZBMa0kJvA&amp;t=753s</span></span>
+  </a>
+
+  <div class="card">
+    <h3>The plan</h3>
+    <ol>
+      <li><a href="#planning">Planning Phase (3 Months)</a></li>
+      <li><a href="#shopping">Shopping Phase (2 Months)</a></li>
+      <li><a href="#closing">Closing Phase (1 Month)</a></li>
+      <li><a href="#reading">Additional Reading Resources</a></li>
+      <li><a href="#calculators">Calculators &amp; References</a></li>
+    </ol>
+  </div>
+</section>
+
+<section class="page" id="planning">
+  <h2>Planning Phase (3 Months)</h2>
+
+  <div class="card">
+    <h3>Day 1 - Write down your "Why"</h3>
+    <ul>
+      <li>Write it down on paper with your partner</li>
+      <li>Remind yourself why you’re actually purchasing</li>
+      <li>Don’t get swept up in FOMO</li>
+      <li>Without a why, budget creep will be high!</li>
+      <li>Examples: Want to be done with renting, Relocating because of Job or Family, Need more space due to a growing family, Need an office due to transitioning to WFH, Health reasons, More privacy, Schooldistricts that are preferred etc</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 2 - Budget Clean-Up</h3>
+    <ul>
+      <li>Consider a budgeting software (what’s coming in and what’s going out on a monthly basis)</li>
+      <li>Trick to find a comfortable payment without a budget</li>
+      <li>What is and isn’t working?
+        <ul>
+          <li>Is there a leak in your budget?</li>
+          <li>Are you actually able to save?</li>
+        </ul>
+      </li>
+      <li>Debt assessment - is now a good time to make a large purchase?</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 3 - Guard Your Headspace</h3>
+    <ul>
+      <li>Consider where you want to get home buying news from, don’t let it just come to you</li>
+      <li>Unsubscribe from channels, block accounts etc</li>
+      <li>Stick to your goals and only rely on news to actually gather info you’re seeking
+        <ul>
+          <li>Most news is out to making you afraid and fearful, so don’t get swept away at that</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 5 - 15 - Polish Your Credit</h3>
+    <ul>
+      <li>Doing this early will give you time to get your best score as quickly as possible</li>
+      <li><strong>Resource</strong>: 10 day credit plan — see the video below</li>
+    </ul>
+  </div>
+
+  <a class="videocard" href="https://www.youtube.com/watch?v=AoSynOFmxnY&amp;t=0s" target="_blank" rel="noopener">
+    <span class="play">▶</span>
+    <span><span class="vt">EASY 10 DAY PLAN — How To Get A Perfe...</span><br>
+    <span class="vu">https://www.youtube.com/watch?v=AoSynOFmxnY&amp;t=0s</span></span>
+  </a>
+
+  <div class="card">
+    <h3>Day 20 - Gather Your Documents</h3>
+    <ul>
+      <li>ID (DL, Passport)</li>
+      <li>Past 2 years:
+        <ul>
+          <li>Tax Returns</li>
+          <li>W2s/1099s</li>
+        </ul>
+      </li>
+      <li>Recently monthly bank statements (or other accounts for down payment)</li>
+      <li>Most recent paystub (if applicable)</li>
+      <li><strong>Tip</strong>: Put it in Google Drive (share to loan officer)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 22 - Prevent Spam Calls / Texts</h3>
+    <ul>
+      <li>(Trigger Leads) Credit Unions sell your information to other lenders - Can go to upto 50 or 70 calls a day!!</li>
+      <li><a href="https://www.optoutprescreen.com/" target="_blank" rel="noopener">OptOutPrescreen.com</a></li>
+      <li><a href="https://www.donotcall.gov/" target="_blank" rel="noopener">DoNotCall.gov</a></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 25 - Talk With a Loan Officer</h3>
+    <ul>
+      <li>Schedule a call with us (Real Estate Agent - winthehouseyoulove)
+        <ul>
+          <li>Licensed in all 50 states</li>
+          <li>Consultation Call to find the best loan that makes sense for you</li>
+          <li>1 application, one credit pull, 70 lenders</li>
+          <li>Federally Charted Bank through Allied First Bank</li>
+        </ul>
+      </li>
+      <li>Verify what you can get approved for (before the loan officer)</li>
+      <li>See your rate, monthly payment, price range and est. out of pocket expenses</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 26 - Create Your Targets</h3>
+    <ul>
+      <li><strong>Resource</strong>: <a href="https://www.winthehouseyoulove.com/tools/max-purchase-price-calculator" target="_blank" rel="noopener">winthehouseyoulove.com/maxprice</a>
+        <ul><li>Code: KYLE for 20% off</li></ul>
+      </li>
+    </ul>
+    <div class="tablewrap">
+    <table>
+      <tr><th>Target</th><th>Amount</th></tr>
+      <tr><td>Monthly Payment</td><td>$4,000 max</td></tr>
+      <tr><td>Price Range</td><td>$1,200,000 max</td></tr>
+      <tr><td>Cash To Close</td><td>$200k down + $30k closing</td></tr>
+      <tr><td>Moving In</td><td>$5k moving budget</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Day 27 - Start Practice Payments (Stress Testing)</h3>
+    <ul>
+      <li>Act like you already have your mortgage payment (if higher)</li>
+      <li>Save the difference of your rent and est. mortgage payment into a savings account and don’t touch it</li>
+      <li>See if the payment creates tension in your budget</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 28 - Create Your Savings Plan</h3>
+    <ul>
+      <li>Practice Payments</li>
+      <li><strong>Example:</strong>
+        <ul>
+          <li>Needed - Saved = Remaining</li>
+          <li>$18,000 (Needed) - $8,000 (Saved) = $10,000 (Remaining)</li>
+          <li>$10,000 (Remaining) / 5 Months = $2,000/month (Savings Needed)</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 30 - Dream, seriously</h3>
+    <ul>
+      <li>We need to do the full home buying dream thing so we can get to the realistic stuff without the baggage</li>
+      <li>Go to open houses for fun</li>
+      <li>Scroll, scroll, scroll (on Zillow)</li>
+      <li>Screenshot and make a folder of houses you love</li>
+      <li>Get it out of your system, feel through it</li>
+      <li>Get it out of your system and come back to what is practically feasible</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 35 - Decide What You Want</h3>
+    <ul>
+      <li>Neighborhood research
+        <ul>
+          <li>Walking</li>
+          <li>Driving by at different times of day</li>
+          <li>Talking to people in the community</li>
+          <li>Safety, School Districts, Proximity to work</li>
+        </ul>
+      </li>
+      <li>Open Houses</li>
+      <li>Create Needs / Wants List
+        <ul>
+          <li><em>Needs</em> need to accomplish why you’re buying the house. Those are not negotiable</li>
+          <li><em>Wants</em> can be compromised on. How to solve for non-needs so that everyone is happy?</li>
+          <li>What will you compromise on?</li>
+          <li>Allow room to grow and expand - Sometimes first homes aren’t what you always want. Second homes and third homes aligns more and more with what you want</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 40 - Plan Your Exit</h3>
+    <ul>
+      <li>How will you get out of your lease?
+        <ul>
+          <li>Make remaining payments</li>
+          <li>Negotiate a buyout</li>
+          <li>Have someone take over the lease</li>
+        </ul>
+      </li>
+      <li>Will you sell or rent?
+        <ul>
+          <li>Do you need money from the sale?</li>
+          <li>Can you afford 2 mortgage payments?</li>
+          <li>Will your offer be contingent?</li>
+        </ul>
+      </li>
+      <li>Create a fallback plan if buying doesn’t work out</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 50 - Talk With A Real Estate Agent</h3>
+    <p><strong>Resource</strong>: <a href="https://homeandmoney.com/kyle/" target="_blank" rel="noopener">winthehouseyoulove.com/agent</a></p>
+    <p>Agent will ask for a pre-qualification letter</p>
+  </div>
+
+  <div class="card">
+    <h3>Day 55 - Get A Home Inspector</h3>
+    <ul>
+      <li>You won’t need them until you’re under contract on a home</li>
+      <li>Get recommendations from your real estate agent</li>
+      <li>Explore online reviews</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Day 60 - Organize Moving Logistics</h3>
+    <ul>
+      <li>Moving company - get quotes if needed</li>
+      <li>Recruit friends early and honestly (don’t rope in the pickup truck guy)</li>
+      <li>Explore local truck rental options if needed</li>
+      <li>(When ready) Begin packing non-essentials early - do it in stages instead of the one TERRIBLE weekend</li>
+    </ul>
+  </div>
+</section>
+
+<section class="page" id="shopping">
+  <h2>Shopping Phase (2 Months)</h2>
+
+  <div class="card">
+    <h3>Explore Homes</h3>
+    <ul>
+      <li>Talk with your agent about your entire situation
+        <ul>
+          <li>Ask them “how realistic is this?”</li>
+          <li>“What might I compromise on?”</li>
+        </ul>
+      </li>
+      <li>Realistically look at homes online</li>
+      <li>Visit at least 3 open houses</li>
+      <li>Walk neighborhoods you’re looking in and narrow the pockets you want to buy in</li>
+      <li>Schedule showings of homes you like</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Review Comps (Comparable Homes)</h3>
+    <ul>
+      <li>Once you found a house you’re super interested!</li>
+      <li>Have your agent “pull comps” to validate the value &amp; structure an offer</li>
+      <li>Schedule showing with agent to see the home</li>
+      <li>(You’re ready to take action at this stage because of all the prep)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Make An Offer</h3>
+    <ul>
+      <li>When you’re ready!</li>
+      <li>This is called being “under contract”</li>
+    </ul>
+  </div>
+</section>
+
+<section class="page" id="closing">
+  <h2>Closing Phase (1 Month)</h2>
+
+  <div class="card">
+    <div class="tablewrap">
+    <table>
+      <tr><th>Stage</th><th>Responsible</th></tr>
+      <tr><td>Seller accepts your offer</td><td>Seller | Your Agent</td></tr>
+      <tr><td>Initial docs &amp; updated docs</td><td>Lender | You</td></tr>
+      <tr><td>Home inspection</td><td>Home Inspector | Seller’s Agent</td></tr>
+      <tr><td>Title Search</td><td>Lender | Title Company</td></tr>
+      <tr><td>Conditional approval</td><td>Lender</td></tr>
+      <tr><td>Home Appraisal</td><td>Lender | Appraiser | Seller’s Agent</td></tr>
+      <tr><td>Arrange utility transfer</td><td>You</td></tr>
+      <tr><td>Review Final Numbers</td><td>Lender | You</td></tr>
+      <tr><td>Sign Final Docs (Closing)</td><td>Lender | You | Agent</td></tr>
+      <tr><td>Move In</td><td>You</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Your First Payment</h3>
+    <ul>
+      <li>One full month gap minimum</li>
+      <li>Closing Date → First Payment</li>
+      <li>3/2 ——————→ 5/1</li>
+      <li>6/16 —————→ 8/1</li>
+      <li>8/28 —————&gt; 10/1</li>
+    </ul>
+  </div>
+</section>
+
+<section class="page" id="reading">
+  <h2>Additional Reading Resources</h2>
+
+  <div class="card">
+    <a class="reslink" href="https://www.investopedia.com/homebuying-guide-4776300" target="_blank" rel="noopener">
+      <span class="rl">Home buying guide</span>
+      <span class="ru">https://www.investopedia.com/homebuying-guide-4776300</span>
+    </a>
+    <a class="reslink" href="https://www.car.org/marketdata/interactive/buyersguide" target="_blank" rel="noopener">
+      <span class="rl">Visual guide</span>
+      <span class="ru">https://www.car.org/marketdata/interactive/buyersguide</span>
+    </a>
+    <a class="reslink" href="https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/" target="_blank" rel="noopener">
+      <span class="rl">10 things to know about buying in Bay Area</span>
+      <span class="ru">https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/</span>
+    </a>
+    <a class="reslink" href="https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&amp;filetype=msword" target="_blank" rel="noopener">
+      <span class="rl">Buyers preparation checklist</span>
+      <span class="ru">https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&amp;filetype=msword</span>
+    </a>
+  </div>
+</section>
+
+<section class="page" id="calculators">
+  <h2>Calculators &amp; References</h2>
+
+  <div class="card">
+    <a class="reslink" href="https://www.winthehouseyoulove.com/lender" target="_blank" rel="noopener">
+      <span class="rl">Get Pre-Approved With My Team</span>
+      <span class="ru">https://www.winthehouseyoulove.com/lender</span>
+    </a>
+    <a class="reslink" href="https://www.winthehouseyoulove.com/agent" target="_blank" rel="noopener">
+      <span class="rl">Get An Agent Referral</span>
+      <span class="ru">https://www.winthehouseyoulove.com/agent</span>
+    </a>
+    <a class="reslink" href="https://www.winthehouseyoulove.com/rates" target="_blank" rel="noopener">
+      <span class="rl">📉 Today’s Rates</span>
+      <span class="ru">https://www.winthehouseyoulove.com/rates</span>
+    </a>
+    <a class="reslink" href="https://www.winthehouseyoulove.com/maxprice" target="_blank" rel="noopener">
+      <span class="rl">🏡 Max Purchase Price Calculator</span>
+      <span class="ru">https://www.winthehouseyoulove.com/maxprice</span>
+    </a>
+    <a class="reslink" href="https://www.winthehouseyoulove.com/advisor" target="_blank" rel="noopener">
+      <span class="rl">📊 Loan Comparison Calculator</span>
+      <span class="ru">https://www.winthehouseyoulove.com/advisor</span>
+    </a>
+    <a class="reslink" href="https://www.winthehouseyoulove.com/timeline" target="_blank" rel="noopener">
+      <span class="rl">📅 Complete Buying Timeline</span>
+      <span class="ru">https://www.winthehouseyoulove.com/timeline</span>
+    </a>
+    <a class="reslink" href="https://www.winthehouseyoulove.com/student" target="_blank" rel="noopener">
+      <span class="rl">🎓 Lower Student Loan Payments</span>
+      <span class="ru">https://www.winthehouseyoulove.com/student</span>
+    </a>
+    <a class="reslink" href="https://www.winthehouseyoulove.com/credit" target="_blank" rel="noopener">
+      <span class="rl">💳 Credit Score Simulator</span>
+      <span class="ru">https://www.winthehouseyoulove.com/credit</span>
+    </a>
+  </div>
+
+  <a class="videocard" href="https://www.youtube.com/watch?v=HfHNQWUoKdc" target="_blank" rel="noopener">
+    <span class="play">▶</span>
+    <span><span class="vt">First Time Home Buyer Q&amp;A</span><br>
+    <span class="vu">https://www.youtube.com/watch?v=HfHNQWUoKdc</span></span>
+  </a>
+</section>
+
+<section class="agent" id="agent">
+  <h2>Research Agent</h2>
+  <p class="lede">Ask about any homebuying topic. The agent reads the full guide on this page first, then researches the current web with Google Search, and keeps the two apart.</p>
+
+  <label for="apiKey">Google AI API key</label>
+  <input type="password" id="apiKey" autocomplete="off" placeholder="Paste your Google AI API key">
+  <p class="note">Your key stays in this browser tab only (sessionStorage). The page sends it only to generativelanguage.googleapis.com, with your research request. The page stores it nowhere else and sends it to no other service.</p>
+
+  <label for="topic">Research topic</label>
+  <textarea id="topic" placeholder="Example: Current first-time buyer programs in California, or: how trigger leads work and how to stop them"></textarea>
+
+  <button id="runAgent" type="button">Research this topic</button>
+  <div id="agentStatus" role="status"></div>
+  <div id="agentAnswer"></div>
+  <div id="agentSources"></div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Homebuying Guide — 6 Months. Guide content comes from the “Homebuying Guide - 6 Months” notes: Planning Phase (3 Months), Shopping Phase (2 Months), Closing Phase (1 Month), Additional Reading Resources, and Calculators &amp; References. Video links open on YouTube. Calculator and resource links open on their own sites.</p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const GUIDE_CONTEXT = "# Homebuying Guide - 6 Months \u2014 Notion Content Dump\n\n- Source: Notion page \"Homebuying Guide - 6 Months\"\n- Root page id: 409f5361-4703-41fe-a84e-3094aa0dc8ff\n- Root page URL: https://app.notion.com/p/409f5361470341fea84e3094aa0dc8ff\n- Parent hub: \"Shrey the `Homeowner`\" (id 3fd18d5e-56f7-80e0-8add-fc28c7a39328)\n- Extracted: Nov 19, 2026, via notion-fetch. All 6 pages fetched successfully. No fetch failures.\n- Tree (original order, as linked from the root page):\n  1. Homebuying Guide - 6 Months \u2014 409f5361-4703-41fe-a84e-3094aa0dc8ff\n  2. Planning Phase (3 Months) \u2014 b859e3cd-3d5c-46b5-b1eb-418a6a3f40f4\n  3. Shopping Phase (2 Months) \u2014 eb966b5f-b3f3-44cb-8e2a-4f6583f77ea5\n  4. Closing Phase (1 Month) \u2014 22eecbb1-39a4-404d-a0e5-883deef25683\n  5. Additional Reading Resources \u2014 93687a85-461c-428f-85a8-ea9a0ad60797\n  6. Calculators & References \u2014 741b3ace-22cb-4d9e-870d-5a575df6e463\n- No page has deeper subpages. The only internal cross-link is inside Planning Phase (an anchor link to its own \"Trick\" block).\n- Note on Calculators & References: most links on that page are youtube.com/redirect links whose destinations are winthehouseyoulove.com pages. The redirect tokens were redacted in the fetch output, so the decoded destination URLs are recorded below alongside each label.\n\n---\n\n## 1. Homebuying Guide - 6 Months\n\n- Page id: 409f5361-4703-41fe-a84e-3094aa0dc8ff\n- Notion URL: https://app.notion.com/p/409f5361470341fea84e3094aa0dc8ff\n\n### 3 Rules for HomeBuying\n\n1. Plan to hold for 5 years or more\n   - **Why**: When home prices have dipped, that dip has been roughly about 5 years. That way you don't lose money.\n2. Be comfortable in your budget\n3. 3 months expenses saved\n\n### Videos on this page\n\n- First Time Home Buyer Q&A \u2192 https://www.youtube.com/watch?v=HfHNQWUoKdc\n- Watch: https://www.youtube.com/watch?v=CdZBMa0kJvA&t=753s\n\n### Subpages (in order)\n\n- Planning Phase (3 Months)\n- Shopping Phase (2 Months)\n- Closing Phase (1 Month)\n- Additional Reading Resources\n- Calculators & References\n\n### YouTube links on this page\n\n- https://www.youtube.com/watch?v=HfHNQWUoKdc (label: \"First Time Home Buyer Q&A\")\n- https://www.youtube.com/watch?v=CdZBMa0kJvA&t=753s (label: \"Watch\")\n\n---\n\n## 2. Planning Phase (3 Months)\n\n- Page id: b859e3cd-3d5c-46b5-b1eb-418a6a3f40f4\n- Notion URL: https://app.notion.com/p/b859e3cd3d5c46b5b1eb418a6a3f40f4\n\n### Day 1 - Write down your \"Why\"\n\n- Write it down on paper with your partner\n- Remind yourself why you're actually purchasing\n- Don't get swept up in FOMO\n- Without a why, budget creep will be high!\n- Examples: Want to be done with renting, Relocating because of Job or Family, Need more space due to a growing family, Need an office due to transitioning to WFH, Health reasons, More privacy, Schooldistricts that are preferred etc\n\n### Day 2 - Budget Clean-Up\n\n- Consider a budgeting software (what's coming in and what's going out on a monthly basis)\n- Trick to find a comfortable payment without a budget (internal anchor link on this page)\n- What is and isn't working?\n  - Is there a leak in your budget?\n  - Are you actually able to save?\n- Debt assessment - is now a good time to make a large purchase?\n\n### Day 3 - Guard Your Headspace\n\n- Consider where you want to get home buying news from, don't let it just come to you\n- Unsubscribe from channels, block accounts etc\n- Stick to your goals and only rely on news to actually gather info you're seeking\n  - Most news is out to making you afraid and fearful, so don't get swept away at that\n\n### Day 5 - 15 - Polish Your Credit\n\n- Doing this early will give you time to get your best score as quickly as possible\n- **Resource**: 10 day credit plan: EASY 10 DAY PLAN \u2014 How To Get A Perfe... \u2014 https://www.youtube.com/watch?v=AoSynOFmxnY&t=0s\n\n### Day 20 - Gather Your Documents\n\n- ID (DL, Passport)\n- Past 2 years:\n  - Tax Returns\n  - W2s/1099s\n- Recently monthly bank statements (or other accounts for down payment)\n- Most recent paystub (if applicable)\n- **Tip**: Put it in Google Drive (share to loan officer)\n\n### Day 22 - Prevent Spam Calls / Texts\n\n- (Trigger Leads) Credit Unions sell your information to other lenders - Can go to upto 50 or 70 calls a day!!\n- OptOutPrescreen.com \u2014 https://www.optoutprescreen.com/\n- DoNotCall.gov \u2014 https://www.donotcall.gov/\n\n### Day 25 - Talk With a Loan Officer\n\n- Schedule a call with us (Real Estate Agent - winthehouseyoulove)\n  - Licensed in all 50 states\n  - Consultation Call to find the best loan that makes sense for you\n  - 1 application, one credit pull, 70 lenders\n  - Federally Charted Bank through Allied First Bank\n- Verify what you can get approved for (before the loan officer)\n- See your rate, monthly payment, price range and est. out of pocket expenses\n\n### Day 26 - Create Your Targets\n\n- **Resource**: winthehouseyoulove.com/maxprice \u2014 https://www.winthehouseyoulove.com/tools/max-purchase-price-calculator\n  - Code: KYLE for 20% off\n\n| Target | Amount |\n| --- | --- |\n| Monthly Payment | $4,000 max |\n| Price Range | $1,200,000 max |\n| Cash To Close | $200k down + $30k closing |\n| Moving In | $5k moving budget |\n\n### Day 27 - Start Practice Payments (Stress Testing)\n\n- Act like you already have your mortgage payment (if higher)\n- Save the difference of your rent and est. mortgage payment into a savings account and don't touch it\n- See if the payment creates tension in your budget\n\n### Day 28 - Create Your Savings Plan\n\n- Practice Payments\n- **Example:**\n  - Needed - Saved = Remaining\n  - $18,000 (Needed) - $8,000 (Saved) = $10,000 (Remaining)\n  - $10,000 (Remaining) / 5 Months = $2,000/month (Savings Needed)\n\n### Day 30 - Dream, seriously\n\n- We need to do the full home buying dream thing so we can get to the realistic stuff without the baggage\n- Go to open houses for fun\n- Scroll, scroll, scroll (on Zillow)\n- Screenshot and make a folder of houses you love\n- Get it out of your system, feel through it\n- Get it out of your system and come back to what is practically feasible\n\n### Day 35 - Decide What You Want\n\n- Neighborhood research\n  - Walking\n  - Driving by at different times of day\n  - Talking to people in the community\n  - Safety, School Districts, Proximity to work\n- Open Houses\n- Create Needs / Wants List\n  - *Needs* need to accomplish why you're buying the house. Those are not negotiable\n  - *Wants* can be compromised on. How to solve for non-needs so that everyone is happy?\n  - What will you compromise on?\n  - Allow room to grow and expand - Sometimes first homes aren't what you always want. Second homes and third homes aligns more and more with what you want\n\n### Day 40 - Plan Your Exit\n\n- How will you get out of your lease?\n  - Make remaining payments\n  - Negotiate a buyout\n  - Have someone take over the lease\n- Will you sell or rent?\n  - Do you need money from the sale?\n  - Can you afford 2 mortgage payments?\n  - Will your offer be contingent?\n- Create a fallback plan if buying doesn't work out\n\n### Day 50 - Talk With A Real Estate Agent\n\n- **Resource**: winthehouseyoulove.com/agent \u2014 https://homeandmoney.com/kyle/\n- Agent will ask for a pre-qualification letter\n\n### Day 55 - Get A Home Inspector\n\n- You won't need them until you're under contract on a home\n- Get recommendations from your real estate agent\n- Explore online reviews\n\n### Day 60 - Organize Moving Logistics\n\n- Moving company - get quotes if needed\n- Recruit friends early and honestly (don't rope in the pickup truck guy)\n- Explore local truck rental options if needed\n- (When ready) Begin packing non-essentials early - do it in stages instead of the one TERRIBLE weekend\n\n### YouTube links on this page\n\n- https://www.youtube.com/watch?v=AoSynOFmxnY&t=0s (label: \"EASY 10 DAY PLAN \u2014 How To Get A Perfe...\" \u2014 the 10 day credit plan resource, Day 5 - 15)\n\n---\n\n## 3. Shopping Phase (2 Months)\n\n- Page id: eb966b5f-b3f3-44cb-8e2a-4f6583f77ea5\n- Notion URL: https://app.notion.com/p/eb966b5fb3f344cb8e2a4f6583f77ea5\n\n### Explore Homes\n\n- Talk with your agent about your entire situation\n  - Ask them \"how realistic is this?\"\n  - \"What might I compromise on?\"\n- Realistically look at homes online\n- Visit at least 3 open houses\n- Walk neighborhoods you're looking in and narrow the pockets you want to buy in\n- Schedule showings of homes you like\n\n### Review Comps (Comparable Homes)\n\n- Once you found a house you're super interested!\n- Have your agent \"pull comps\" to validate the value & structure an offer\n- Schedule showing with agent to see the home\n- (You're ready to take action at this stage because of all the prep)\n\n### Make An Offer\n\n- When you're ready!\n- This is called being \"under contract\"\n\n### YouTube links on this page\n\n- None.\n\n---\n\n## 4. Closing Phase (1 Month)\n\n- Page id: 22eecbb1-39a4-404d-a0e5-883deef25683\n- Notion URL: https://app.notion.com/p/22eecbb139a4404da0e5883deef25683\n\n| Stage | Responsible |\n| --- | --- |\n| Seller accepts your offer | Seller \\| Your Agent |\n| Initial docs & updated docs | Lender \\| You |\n| Home inspection | Home Inspector \\| Seller's Agent |\n| Title Search | Lender \\| Title Company |\n| Conditional approval | Lender |\n| Home Appraisal | Lender \\| Appraiser \\| Seller's Agent |\n| Arrange utility transfer | You |\n| Review Final Numbers | Lender \\| You |\n| Sign Final Docs (Closing) | Lender \\| You \\| Agent |\n| Move In | You |\n\n### Your First Payment\n\n- One full month gap minimum\n- Closing Date \u2192 First Payment\n- 3/2 \u2014\u2014\u2014\u2014\u2014\u2014\u2192 5/1\n- 6/16 \u2014\u2014\u2014\u2014\u2014\u2192 8/1\n- 8/28 \u2014\u2014\u2014\u2014\u2014> 10/1\n\n### YouTube links on this page\n\n- None.\n\n---\n\n## 5. Additional Reading Resources\n\n- Page id: 93687a85-461c-428f-85a8-ea9a0ad60797\n- Notion URL: https://app.notion.com/p/93687a85461c428f85a8ea9a0ad60797\n\n- Home buying guide: https://www.investopedia.com/homebuying-guide-4776300\n- Visual guide: https://www.car.org/marketdata/interactive/buyersguide\n- 10 things to know about buying in Bay Area: https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/\n- Buyers preparation checklist: https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&filetype=msword\n\n### YouTube links on this page\n\n- None.\n\n---\n\n## 6. Calculators & References\n\n- Page id: 741b3ace-22cb-4d9e-870d-5a575df6e463\n- Notion URL: https://app.notion.com/p/741b3ace22cb4d9e870d5a575df6e463\n\n- Get Pre-Approved With My Team \u2192 destination: https://www.winthehouseyoulove.com/lender (original link is a youtube.com/redirect link, token redacted in fetch)\n- Get An Agent Referral \u2192 destination: https://www.winthehouseyoulove.com/agent (original link is a youtube.com/redirect link, token redacted in fetch)\n- First Time Home Buyer Q&A \u2192 https://www.youtube.com/watch?v=HfHNQWUoKdc\n- \ud83d\udcc9 Today's Rates \u2192 destination: https://www.winthehouseyoulove.com/rates (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83c\udfe1 Max Purchase Price Calculator \u2192 destination: https://www.winthehouseyoulove.com/maxprice (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83d\udcca Loan Comparison Calculator \u2192 destination: https://www.winthehouseyoulove.com/advisor (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83d\udcc5 Complete Buying Timeline \u2192 destination: https://www.winthehouseyoulove.com/timeline (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83c\udf93 Lower Student Loan Payments \u2192 destination: https://www.winthehouseyoulove.com/student (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83d\udcb3 Credit Score Simulator \u2192 destination: https://www.winthehouseyoulove.com/credit (original link is a youtube.com/redirect link, token redacted in fetch)\n\n### YouTube links on this page\n\n- https://www.youtube.com/watch?v=HfHNQWUoKdc (label: \"First Time Home Buyer Q&A\")\n- 8 youtube.com/redirect links (labels and decoded destinations listed above)\n\n---\n\n## Fetch failures\n\n- None. All 6 pages in the tree fetched successfully on the first attempt.\n";
+
+const keyInput = document.getElementById("apiKey");
+const topicInput = document.getElementById("topic");
+const runBtn = document.getElementById("runAgent");
+const statusEl = document.getElementById("agentStatus");
+const answerEl = document.getElementById("agentAnswer");
+const sourcesEl = document.getElementById("agentSources");
+
+const savedKey = sessionStorage.getItem("googleAiApiKey");
+if (savedKey) keyInput.value = savedKey;
+keyInput.addEventListener("change", () => {
+  const v = keyInput.value.trim();
+  if (v) sessionStorage.setItem("googleAiApiKey", v);
+  else sessionStorage.removeItem("googleAiApiKey");
+});
+
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+}
+
+function renderMarkdownLite(md) {
+  const lines = md.split(/\r?\n/);
+  let html = "";
+  let listType = null;
+  const closeList = () => { if (listType) { html += listType === "ul" ? "</ul>" : "</ol>"; listType = null; } };
+  const inline = (t) => {
+    let out = escapeHtml(t);
+    out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    out = out.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    out = out.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
+    return out;
+  };
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if (h) { closeList(); const lvl = Math.min(h[1].length + 1, 4); html += "<h" + lvl + ">" + inline(h[2]) + "</h" + lvl + ">"; continue; }
+    const ul = line.match(/^\s*[-*]\s+(.*)$/);
+    if (ul) { if (listType !== "ul") { closeList(); html += "<ul>"; listType = "ul"; } html += "<li>" + inline(ul[1]) + "</li>"; continue; }
+    const ol = line.match(/^\s*\d+[.)]\s+(.*)$/);
+    if (ol) { if (listType !== "ol") { closeList(); html += "<ol>"; listType = "ol"; } html += "<li>" + inline(ol[1]) + "</li>"; continue; }
+    if (!line.trim()) { closeList(); continue; }
+    closeList();
+    html += "<p>" + inline(line.trim()) + "</p>";
+  }
+  closeList();
+  return html;
+}
+
+function buildPrompt(topic) {
+  return [
+    "You are the research agent built into a homebuying guide website.",
+    "",
+    "THE GUIDE (full text of the guide published on this page):",
+    "----- BEGIN GUIDE -----",
+    GUIDE_CONTEXT,
+    "----- END GUIDE -----",
+    "",
+    "RESEARCH TOPIC: " + topic,
+    "",
+    "Instructions:",
+    "1. Use Google Search to research the topic with current sources.",
+    "2. Structure the answer in exactly these sections, using these headings:",
+    "   ## Bottom line — two or three sentences that answer the topic directly.",
+    "   ## What the guide says — only what the guide text above says about this topic. If the guide says nothing about it, say so plainly.",
+    "   ## What the research found — fresh findings from the web search, with numbers, dates, and program names where relevant.",
+    "   ## Next steps — a short numbered list of concrete actions the reader can take.",
+    "3. Keep guide guidance and fresh research clearly separate. Never present a researched fact as something the guide says.",
+    "4. Cite sources inline for researched claims."
+  ].join("\n");
+}
+
+async function runResearch() {
+  const key = keyInput.value.trim();
+  const topic = topicInput.value.trim();
+  statusEl.className = "";
+  sourcesEl.innerHTML = "";
+  answerEl.style.display = "none";
+  answerEl.innerHTML = "";
+  if (!key) { statusEl.className = "error"; statusEl.textContent = "Enter your Google AI API key first."; return; }
+  if (!topic) { statusEl.className = "error"; statusEl.textContent = "Enter a research topic first."; return; }
+  sessionStorage.setItem("googleAiApiKey", key);
+  runBtn.disabled = true;
+  statusEl.textContent = "Researching… the agent reads the guide, searches the web, and writes the brief. This can take a minute.";
+  try {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: buildPrompt(topic) }] }],
+        tools: [{ google_search: {} }]
+      })
+    });
+    if (!res.ok) {
+      let detail = "";
+      try { const e = await res.json(); detail = (e && e.error && e.error.message) || ""; } catch (_) {}
+      throw new Error("The Google AI request failed (HTTP " + res.status + ")" + (detail ? ": " + detail : ". Check the API key and try again."));
+    }
+    const data = await res.json();
+    const cand = data && data.candidates && data.candidates[0];
+    const parts = (cand && cand.content && cand.content.parts) || [];
+    const text = parts.map(p => p.text || "").join("\n").trim();
+    if (!text) throw new Error("The agent returned an empty answer. Try again, or rephrase the topic.");
+    answerEl.innerHTML = renderMarkdownLite(text);
+    answerEl.style.display = "block";
+    const chunks = (cand.groundingMetadata && cand.groundingMetadata.groundingChunks) || [];
+    const seen = new Set();
+    const links = [];
+    for (const c of chunks) {
+      const web = c && c.web;
+      if (web && web.uri && !seen.has(web.uri)) { seen.add(web.uri); links.push(web); }
+    }
+    if (links.length) {
+      sourcesEl.innerHTML = "<strong>Sources:</strong><br>" + links.map(w =>
+        '<a href="' + escapeHtml(w.uri) + '" target="_blank" rel="noopener">' + escapeHtml(w.title || w.uri) + "</a>"
+      ).join("<br>");
+    }
+    statusEl.textContent = "Done. The brief separates guide guidance from fresh research.";
+  } catch (err) {
+    statusEl.className = "error";
+    statusEl.textContent = "The research agent could not finish. " + (err && err.message ? err.message : "Check your connection and try again.");
+  } finally {
+    runBtn.disabled = false;
+  }
+}
+
+runBtn.addEventListener("click", runResearch);
+</script>
+</body>
+</html>
