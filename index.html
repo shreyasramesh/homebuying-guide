@@ -1,591 +1,2670 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="theme-light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAFAFA">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Homebuying">
 <title>Homebuying Guide — 6 Months</title>
 <meta name="description" content="A six-month homebuying guide: three months of planning, two months of shopping, one month of closing — with a built-in research agent.">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<script>
+  // Theme boot before paint (no flash): Light mode by default, Dark if chosen.
+  (function () {
+    try {
+      var pick = localStorage.getItem('hb_theme_pick');
+      if (pick === 'dark') {
+        document.documentElement.className = 'dark';
+        document.documentElement.style.backgroundColor = '#090A0D';
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', '#090A0D');
+      }
+    } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* =========================================================================
+     Curie-inspired Design System (Light default + Exact-Inverse Dark Mode)
+     Light: #FAFAFA canvas -> #FFFFFF cards -> #0F172A text -> #000000 primary
+     Dark:  #090A0D canvas -> #121418 cards -> #F3F4F6 text -> #F3F4F6 primary
+     ========================================================================= */
+  :root {
+    --bg-canvas: #FAFAFA;
+    --bg-card: #FFFFFF;
+    --bg-subtle: #F4F5F7;
+    --bg-hover: #F3F4F6;
+    --bg-header: rgba(255, 255, 255, 0.94);
+    --bg-popover: #FFFFFF;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #6B7280;
+    --hairline: rgba(15, 23, 42, 0.09);
+    --hairline-strong: rgba(15, 23, 42, 0.16);
+    --btn-bg: #000000;
+    --btn-bg-hover: #1F2937;
+    --btn-text: #FFFFFF;
+    --gain: #00A805;
+    --gain-bright: #00C805;
+    --gain-soft: rgba(0, 200, 5, 0.09);
+    --loss: #E04600;
+    --loss-soft: rgba(255, 80, 0, 0.09);
+    --lime: #C3FE09;
+    --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.03);
+    --shadow-pop: 0 12px 32px -8px rgba(15, 23, 42, 0.16);
+    --focus-ring: #000000;
+    --header-h: 64px;
+    --agent-w: 440px;
+    --ease-out: cubic-bezier(0.2, 0, 0, 1);
+    --spring: linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50.1%, 1.015 55%, 1.017 63.9%, 1.001 85.2%, 1);
+    interpolate-size: allow-keywords;
+  }
+
+  html.dark {
+    --bg-canvas: #090A0D;
+    --bg-card: #121418;
+    --bg-subtle: rgba(255, 255, 255, 0.05);
+    --bg-hover: rgba(255, 255, 255, 0.06);
+    --bg-header: rgba(9, 10, 13, 0.92);
+    --bg-popover: #1C1F26;
+    --text-primary: #F3F4F6;
+    --text-secondary: #A1A7B3;
+    --text-muted: #7B8290;
+    --hairline: rgba(255, 255, 255, 0.09);
+    --hairline-strong: rgba(255, 255, 255, 0.15);
+    --btn-bg: #F3F4F6;
+    --btn-bg-hover: #FFFFFF;
+    --btn-text: #090A0D;
+    --gain: #22C55E;
+    --gain-bright: #00C805;
+    --gain-soft: rgba(34, 197, 94, 0.14);
+    --loss: #FF6B35;
+    --loss-soft: rgba(255, 107, 53, 0.14);
+    --shadow-card: none;
+    --shadow-pop: 0 16px 40px -10px rgba(0, 0, 0, 0.72);
+    --focus-ring: #F3F4F6;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 20px);
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
+  }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: #faf7f0; color: #1c2420; line-height: 1.6;
+    font-family: 'JetBrains Mono', 'Inter', ui-monospace, SFMono-Regular, monospace;
+    font-size: 14px;
+    letter-spacing: -0.015em;
+    line-height: 1.6;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
+    overflow-x: clip;
+    min-height: 100dvh;
   }
-  a { color: #166534; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 18px; }
-  header.hero {
-    background: #14532d; color: #f0fdf4; padding: 44px 0 34px;
+
+  .theme-switching, .theme-switching *, .theme-switching *::before, .theme-switching *::after {
+    transition: none !important;
   }
-  header.hero h1 { font-size: 2rem; line-height: 1.2; letter-spacing: -0.01em; }
-  header.hero p.sub { margin-top: 10px; font-size: 1.02rem; color: #bbf7d0; max-width: 620px; }
-  .phases { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-  .phases span {
-    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
-    border-radius: 999px; padding: 4px 12px; font-size: .85rem;
+
+  ::selection {
+    background-color: rgba(15, 23, 42, 0.12);
+    color: var(--text-primary);
   }
-  nav.toc {
-    position: sticky; top: 0; z-index: 10; background: rgba(250,247,240,.96);
-    border-bottom: 1px solid #e3ddd0; overflow-x: auto; white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
+  html.dark ::selection {
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #FFFFFF;
   }
-  nav.toc .wrap { display: flex; gap: 4px; padding-top: 8px; padding-bottom: 8px; }
-  nav.toc a {
-    text-decoration: none; color: #374151; font-size: .9rem; padding: 6px 10px;
-    border-radius: 8px; flex: 0 0 auto;
+
+  *:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
   }
-  nav.toc a:hover, nav.toc a:focus { background: #e7e2d4; }
-  main { padding: 10px 0 30px; }
-  section.page { padding: 26px 0 6px; }
-  section.page > h2 {
-    font-size: 1.55rem; line-height: 1.25; color: #14532d;
-    border-bottom: 3px solid #d9c98a; padding-bottom: 8px; margin-bottom: 16px;
+
+  h1, h2, h3, h4 {
+    font-family: 'JetBrains Mono', 'Inter', ui-monospace, SFMono-Regular, monospace;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
   }
+
+  .tabular-nums, td, th { font-variant-numeric: tabular-nums; }
+
+  .prose {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.68;
+    letter-spacing: 0;
+    color: var(--text-secondary);
+  }
+  .prose strong { color: var(--text-primary); font-weight: 600; }
+  .prose em { font-style: italic; color: var(--text-primary); }
+
+  a {
+    color: var(--text-primary);
+    text-decoration-color: var(--hairline-strong);
+    text-underline-offset: 3px;
+    transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  }
+  a:hover { text-decoration-color: var(--text-primary); }
+
+  button, [role="button"], summary {
+    font-family: inherit;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    transition: transform 80ms var(--ease-out), background-color 120ms ease, border-color 120ms ease, color 120ms ease, opacity 120ms ease;
+  }
+  button:active:not(:disabled), [role="button"]:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* ===================== Fixed Top Header (Curie Shell) ===================== */
+  header.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-h);
+    z-index: 40;
+    background-color: var(--bg-header);
+    backdrop-filter: saturate(180%) blur(8px);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    border-bottom: 1px solid var(--hairline);
+    transition: right 220ms var(--ease-out);
+  }
+  body.agent-docked header.topbar {
+    right: var(--agent-w);
+  }
+  .topbar-inner {
+    height: 100%;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    flex: 1;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.03em;
+    flex-shrink: 0;
+  }
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Header Search Pill (like Curie SymbolSearch) */
+  .search-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+  }
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--hairline-strong);
+    background-color: var(--bg-card);
+    color: var(--text-muted);
+    transition: border-color 120ms ease, background-color 120ms ease;
+  }
+  .search-box:focus-within {
+    border-color: var(--text-primary);
+  }
+  .search-box input {
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    width: 100%;
+    min-width: 0;
+    outline: none !important;
+  }
+  .search-box input::placeholder { color: var(--text-muted); }
+  .search-kbd {
+    font-size: 11px;
+    color: var(--text-muted);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 5px;
+    padding: 1px 5px;
+    line-height: 1.3;
+    flex-shrink: 0;
+  }
+  .search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: min(380px, calc(100vw - 32px));
+    max-height: 360px;
+    overflow-y: auto;
+    background: var(--bg-popover);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 12px;
+    box-shadow: var(--shadow-pop);
+    padding: 6px;
+    z-index: 60;
+    display: none;
+    animation: curie-pop-in 160ms var(--ease-out) both;
+    transform-origin: top left;
+  }
+  .search-results.open { display: block; }
+  .search-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 9px 10px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 13px;
+    text-decoration: none;
+  }
+  .search-item:hover, .search-item.active {
+    background: var(--bg-hover);
+  }
+  .search-item-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .search-empty {
+    padding: 14px 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  /* Desktop Nav Links */
+  nav.desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+  }
+  nav.desktop-nav a.nav-link {
+    position: relative;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 6px 0;
+  }
+  nav.desktop-nav a.nav-link:hover,
+  nav.desktop-nav a.nav-link.active {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  nav.desktop-nav a.nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--text-primary);
+  }
+
+  /* Signature Lime Pill (the one lime element in the header, like Curie Radar) */
+  .lime-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--lime);
+    color: #000000;
+    border: none;
+    border-radius: 999px;
+    padding: 6px 13px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .lime-pill:hover { filter: brightness(0.95); }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-btn:hover { background: var(--bg-hover); }
+
+  .compact-actions {
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Mobile Menu Popover */
+  .menu-wrap { position: relative; }
+  .menu-pop {
+    position: absolute;
+    right: 0;
+    top: 44px;
+    width: min(260px, calc(100vw - 32px));
+    background: var(--bg-popover);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 12px;
+    box-shadow: var(--shadow-pop);
+    padding: 6px;
+    z-index: 60;
+    display: none;
+    animation: curie-pop-in 160ms var(--ease-out) both;
+    transform-origin: top right;
+  }
+  .menu-pop.open { display: block; }
+  .menu-pop a, .menu-pop button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-align: left;
+  }
+  .menu-pop a:hover, .menu-pop button:hover { background: var(--bg-hover); }
+  .menu-pop a.active { font-weight: 700; }
+  .menu-pop a.active::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gain-bright);
+  }
+  .menu-sep { height: 1px; background: var(--hairline); margin: 5px 6px; }
+
+  /* Mobile Search Overlay Bar */
+  .mobile-search-bar {
+    display: none;
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    z-index: 39;
+    background: var(--bg-header);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hairline);
+    padding: 10px 16px;
+  }
+  .mobile-search-bar.open { display: block; }
+  .mobile-search-bar .search-wrap { max-width: 100%; }
+
+  /* ===================== Main Shell ===================== */
+  .page-shell {
+    padding-top: calc(var(--header-h) + 28px);
+    padding-bottom: 96px;
+    transition: padding-right 220ms var(--ease-out);
+  }
+  body.agent-docked .page-shell {
+    padding-right: var(--agent-w);
+  }
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===================== Hero & Dashboard Overview ===================== */
+  .hero {
+    margin-bottom: 28px;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .live-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gain-bright);
+    display: inline-block;
+  }
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--gain-bright);
+    animation: curie-live-pulse 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  }
+  .hero h1 {
+    font-size: clamp(1.7rem, 3vw, 2.25rem);
+    line-height: 1.18;
+    margin-bottom: 10px;
+  }
+  .hero-sub {
+    max-width: 660px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  /* KPI Target Strip (like Curie Portfolio Metrics) */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .kpi-val {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .kpi-sub {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* 6-Month Timeline & PS5 Progress Card */
+  .progress-card {
+    background: var(--bg-card);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-top: 14px;
+    box-shadow: var(--shadow-card);
+  }
+  .progress-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .progress-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .progress-pct {
+    color: var(--gain);
+    font-weight: 700;
+  }
+  .progress-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .reset-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    display: none;
+  }
+  .reset-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .reset-btn.show { display: inline-flex; }
+
+  .ps5-track {
+    position: relative;
+    width: 100%;
+    height: 7px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--hairline);
+  }
+  .ps5-fill {
+    position: relative;
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: var(--text-primary);
+    transition: width 400ms var(--ease-out);
+  }
+  .ps5-fill.all-done { background: var(--gain-bright); }
+
+  .phase-pills {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .phase-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--hairline);
+    background: var(--bg-canvas);
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .phase-pill:hover {
+    border-color: var(--hairline-strong);
+    background: var(--bg-hover);
+  }
+  .phase-pill span.dur {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  /* ===================== SectionShell Pattern ===================== */
+  section.page {
+    padding-top: 34px;
+    margin-bottom: 10px;
+  }
+  .sec-head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .sec-head-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .sec-head h2 {
+    font-size: 21px;
+    line-height: 1.25;
+  }
+  .sec-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Segmented Filter Controls (Curie SectionShell Segmented) */
+  .segmented {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12.5px;
+  }
+  .seg-btn {
+    position: relative;
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+    color: var(--text-muted);
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .seg-btn:hover { color: var(--text-primary); }
+  .seg-btn[aria-pressed="true"] {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .seg-btn[aria-pressed="true"]::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .sec-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 8px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .ask-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 4px 0;
+  }
+  .ask-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ===================== Cards & Checklist Items ===================== */
   .card {
-    background: #fff; border: 1px solid #e3ddd0; border-radius: 12px;
-    padding: 18px 20px; margin-bottom: 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-card);
+    transition: border-color 140ms ease, opacity 160ms ease;
   }
-  .card h3 { font-size: 1.08rem; margin-bottom: 8px; color: #1c2420; }
-  .card ul, .card ol { margin: 6px 0 6px 22px; }
-  .card li { margin: 3px 0; }
-  .card li ul { margin-top: 3px; }
-  .card p { margin: 6px 0; }
-  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .95rem; }
-  th, td { border: 1px solid #d8d2c2; padding: 8px 10px; text-align: left; vertical-align: top; }
-  th { background: #f1ecdd; }
-  .tablewrap { overflow-x: auto; }
+  .card:hover { border-color: var(--hairline-strong); }
+  .card.is-done {
+    opacity: 0.72;
+  }
+  .card.is-done .card-title {
+    text-decoration: line-through;
+    text-decoration-color: var(--text-muted);
+  }
+  .card.filtered-out { display: none; }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .card-head-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 0;
+  }
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--hairline);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .card.is-done .day-badge {
+    background: var(--gain-soft);
+    border-color: transparent;
+    color: var(--gain);
+  }
+  .card-title {
+    font-size: 15.5px;
+    line-height: 1.35;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* Custom Curie Check Toggle */
+  .check-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid var(--hairline-strong);
+    background: transparent;
+    color: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .check-btn:hover { border-color: var(--text-primary); }
+  .check-btn[aria-checked="true"] {
+    background: var(--gain-bright);
+    border-color: var(--gain-bright);
+    color: #FFFFFF;
+  }
+
+  .card ul, .card ol {
+    margin: 6px 0 2px 20px;
+  }
+  .card li { margin: 4px 0; }
+  .card li ul { margin-top: 4px; margin-bottom: 4px; }
+  .card p + p { margin-top: 8px; }
+
+  .plan-list {
+    list-style: none;
+    margin: 0 !important;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .plan-list li {
+    margin: 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .plan-list li:last-child { border-bottom: none; }
+  .plan-list a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 4px;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-primary);
+    border-radius: 8px;
+  }
+  .plan-list a:hover {
+    background: var(--bg-hover);
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .plan-num {
+    color: var(--text-muted);
+    margin-right: 10px;
+    font-size: 12px;
+  }
+
+  /* Two-column Overview Grid */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 12px;
+  }
+  .overview-grid .card { margin-bottom: 0; }
+
+  /* ===================== Tables (Curie Minimalist Hairline) ===================== */
+  .tablewrap {
+    overflow-x: auto;
+    margin-top: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--hairline-strong);
+  }
+  tbody td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--hairline);
+    vertical-align: middle;
+    color: var(--text-primary);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background-color: var(--bg-hover); }
+
+  .role-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .role-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 500;
+    background: var(--bg-subtle);
+    border: 1px solid var(--hairline);
+    color: var(--text-secondary);
+  }
+  .role-tag.you {
+    background: var(--gain-soft);
+    border-color: transparent;
+    color: var(--gain);
+    font-weight: 600;
+  }
+
+  /* First Payment Timeline Chips */
+  .payment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .pay-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--bg-canvas);
+    border: 1px solid var(--hairline);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .pay-chip .arrow { color: var(--gain); }
+
+  /* ===================== Video & Resource Rows ===================== */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    margin: 12px 0;
+  }
   .videocard {
-    display: flex; gap: 12px; align-items: flex-start; text-decoration: none;
-    background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px;
-    padding: 14px 16px; margin-bottom: 12px; color: #1c2420;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    text-decoration: none;
+    background: var(--bg-card);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: 13px 15px;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-card);
+    transition: border-color 120ms ease, background-color 120ms ease, transform 80ms var(--ease-out);
   }
-  .videocard:hover, .videocard:focus { border-color: #f97316; }
+  .videocard:hover {
+    border-color: var(--hairline-strong);
+    background: var(--bg-hover);
+  }
+  .videocard:active { transform: scale(0.99); }
   .videocard .play {
-    flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%;
-    background: #dc2626; color: #fff; display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; padding-left: 3px;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding-left: 2px;
   }
-  .videocard .vt { font-weight: 600; }
-  .videocard .vu { font-size: .82rem; color: #6b7280; word-break: break-all; }
-  .reslink { display: block; padding: 7px 0; border-bottom: 1px dashed #e3ddd0; text-decoration: none; }
+  .videocard .vmeta { min-width: 0; flex: 1; }
+  .videocard .vt {
+    display: block;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--text-primary);
+    line-height: 1.35;
+  }
+  .videocard .vu {
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .res-list { padding: 6px 12px; }
+  .reslink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--hairline);
+    text-decoration: none;
+    border-radius: 10px;
+  }
   .reslink:last-child { border-bottom: none; }
-  .reslink .rl { font-weight: 600; }
-  .reslink .ru { display: block; font-size: .82rem; color: #6b7280; word-break: break-all; font-weight: 400; }
-  /* Research agent */
-  section.agent {
-    background: #14532d; color: #f0fdf4; border-radius: 16px;
-    padding: 26px 22px; margin: 30px 0 10px;
+  .reslink:hover { background: var(--bg-hover); }
+  .reslink-text { min-width: 0; }
+  .reslink .rl {
+    display: block;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--text-primary);
   }
-  section.agent h2 { font-size: 1.4rem; margin-bottom: 6px; color: #fff; border: none; padding: 0; }
-  section.agent p.lede { color: #bbf7d0; font-size: .95rem; margin-bottom: 16px; }
-  section.agent label { display: block; font-size: .88rem; font-weight: 600; margin: 14px 0 5px; }
-  section.agent input[type="password"], section.agent textarea {
-    width: 100%; border: 1px solid #4ade80; border-radius: 10px; padding: 11px 12px;
-    font: inherit; font-size: .95rem; background: #052e16; color: #f0fdf4;
+  .reslink .ru {
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 2px;
   }
-  section.agent textarea { min-height: 74px; resize: vertical; }
-  section.agent .note { font-size: .8rem; color: #86efac; margin-top: 5px; }
-  section.agent button {
-    margin-top: 16px; background: #facc15; color: #1c2420; border: none; cursor: pointer;
-    font: inherit; font-weight: 700; border-radius: 10px; padding: 12px 22px; min-height: 48px;
+  .res-arrow {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    font-size: 14px;
   }
-  section.agent button:disabled { opacity: .55; cursor: wait; }
-  #agentStatus { margin-top: 14px; font-size: .92rem; }
-  #agentStatus.error { color: #fca5a5; }
+  .reslink:hover .res-arrow { color: var(--text-primary); }
+
+  /* ===================== Inline Research Agent Launcher Card ===================== */
+  .agent-banner {
+    background: var(--bg-card);
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-top: 28px;
+    box-shadow: var(--shadow-card);
+  }
+  .agent-banner-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .agent-banner h2 { font-size: 19px; }
+  .agent-banner p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    max-width: 640px;
+  }
+  .starter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .chip-btn {
+    border: 1px solid var(--hairline-strong);
+    background: var(--bg-canvas);
+    color: var(--text-primary);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .chip-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-primary);
+  }
+
+  .primary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 40px;
+  }
+  .primary-btn:hover { background: var(--btn-bg-hover); }
+  .primary-btn:disabled { opacity: 0.55; cursor: wait; }
+
+  /* ===================== Slide-Over Research Agent Drawer (Curie AgentPanel) ===================== */
+  .drawer-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(0, 0, 0, 0.36);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+  .drawer-scrim.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  @media (min-width: 1180px) {
+    .drawer-scrim { display: none; }
+  }
+
+  aside.agent-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(var(--agent-w), 100vw);
+    z-index: 50;
+    background: var(--bg-card);
+    border-left: 1px solid var(--hairline);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 220ms var(--ease-out);
+    box-shadow: -12px 0 36px rgba(0, 0, 0, 0.08);
+  }
+  html.dark aside.agent-drawer {
+    background: #121418;
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.55);
+  }
+  aside.agent-drawer.open { transform: translateX(0); }
+
+  .drawer-head {
+    height: var(--header-h);
+    padding: 0 18px;
+    border-bottom: 1px solid var(--hairline);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .drawer-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .drawer-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .drawer-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-subtle);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .drawer-lede {
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+
+  /* Collapsible API Key panel */
+  details.key-panel {
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    background: var(--bg-canvas);
+    padding: 10px 12px;
+  }
+  details.key-panel summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  details.key-panel summary::-webkit-details-marker { display: none; }
+  .key-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .key-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+  .key-dot.ready { background: var(--gain-bright); }
+  .key-inner { margin-top: 10px; }
+
+  .field-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .input-field {
+    width: 100%;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 13.5px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 120ms ease;
+  }
+  .input-field:focus { border-color: var(--text-primary); }
+  textarea.input-field { min-height: 86px; resize: vertical; line-height: 1.5; }
+  .field-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  #agentStatus {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    min-height: 20px;
+  }
+  #agentStatus.error { color: var(--loss); }
+
   #agentAnswer {
-    margin-top: 14px; background: #fff; color: #1c2420; border-radius: 12px;
-    padding: 18px 20px; display: none;
+    display: none;
+    background: var(--bg-canvas);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    padding: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-primary);
   }
-  #agentAnswer h3 { font-size: 1.05rem; margin: 14px 0 6px; }
-  #agentAnswer h3:first-child { margin-top: 0; }
-  #agentAnswer ul, #agentAnswer ol { margin: 6px 0 6px 22px; }
+  #agentAnswer h3, #agentAnswer h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    margin: 14px 0 6px;
+    color: var(--text-primary);
+  }
+  #agentAnswer h3:first-child, #agentAnswer h4:first-child { margin-top: 0; }
+  #agentAnswer ul, #agentAnswer ol { margin: 6px 0 8px 20px; }
+  #agentAnswer li { margin: 3px 0; }
   #agentAnswer p { margin: 6px 0; }
-  #agentSources { margin-top: 12px; font-size: .85rem; }
-  #agentSources a { word-break: break-all; }
-  footer { padding: 26px 0 40px; color: #6b7280; font-size: .85rem; }
+  #agentAnswer hr { border: none; border-top: 1px solid var(--hairline); margin: 12px 0; }
+  #agentAnswer code {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.88em;
+    background: var(--bg-subtle);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 1px 5px;
+  }
+
+  #agentSources {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .source-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--hairline);
+    background: var(--bg-canvas);
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 12px;
+  }
+  .source-chip:hover { background: var(--bg-hover); border-color: var(--hairline-strong); }
+  .source-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Floating Bottom-Right Shimmering Prism Launcher (like Curie AgentFace) */
+  .prism-fab {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 38;
+    border: 1px solid var(--hairline-strong);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-radius: 999px;
+    padding: 8px 14px 8px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12.5px;
+    font-weight: 600;
+    box-shadow: var(--shadow-pop);
+  }
+  .prism-fab:hover { border-color: var(--text-primary); }
+  body.agent-open .prism-fab { opacity: 0; pointer-events: none; transform: scale(0.92); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--hairline);
+    margin-top: 48px;
+    padding: 24px 0 36px;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* ===================== Curie Animations ===================== */
+  @keyframes curie-pop-in {
+    from { opacity: 0; transform: scale(0.97); }
+  }
+  @keyframes curie-icon-in {
+    from { opacity: 0; filter: blur(4px); transform: scale(0.8); }
+  }
+  .curie-icon-swap { animation: curie-icon-in 200ms var(--ease-out) both; }
+
+  @keyframes curie-live-pulse {
+    0% { transform: scale(1); opacity: 0.65; }
+    70%, 100% { transform: scale(2.6); opacity: 0; }
+  }
+  @keyframes curie-prism-float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-3px) rotate(1.5deg); }
+  }
+  .curie-prism-float { animation: curie-prism-float 4.2s ease-in-out infinite; }
+
+  /* Antigravity / Curie 2x2 clockwise 4-dot AI working spinner */
+  @keyframes curie-ag-dot {
+    0%, 100% { opacity: 1; }
+    25% { opacity: 0.45; }
+    50% { opacity: 0.14; }
+    75% { opacity: 0.45; }
+  }
+  .ag-spinner {
+    display: inline-grid;
+    grid-template-columns: repeat(2, 5px);
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .ag-spinner span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: curie-ag-dot 1s ease-in-out infinite;
+  }
+  .ag-spinner span:nth-child(2) { animation-delay: 0.25s; }
+  .ag-spinner span:nth-child(4) { animation-delay: 0.5s; }
+  .ag-spinner span:nth-child(3) { animation-delay: 0.75s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .curie-icon-swap, .curie-prism-float, .live-dot::after, .ag-spinner span { animation: none !important; }
+  }
+
+  /* ===================== Responsive (Laptop 1440 -> Foldable 830 -> Phone 390) ===================== */
+  @media (max-width: 1619px) {
+    body.agent-docked nav.desktop-nav { display: none; }
+    body.agent-docked .search-wrap.desktop-search { display: none; }
+    body.agent-docked .compact-actions { display: flex; }
+  }
+  @media (max-width: 1320px) {
+    body.agent-docked .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    body.agent-docked .overview-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 1179px) {
+    nav.desktop-nav { display: none; }
+    .search-wrap.desktop-search { display: none; }
+    .compact-actions { display: flex; }
+    body.agent-docked header.topbar { right: 0; }
+    body.agent-docked .page-shell { padding-right: 0; }
+  }
+  @media (max-width: 820px) {
+    .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .overview-grid { grid-template-columns: 1fr; }
+    .phase-pills { grid-template-columns: 1fr; }
+    .payment-grid { grid-template-columns: 1fr; }
+  }
   @media (max-width: 560px) {
-    header.hero h1 { font-size: 1.6rem; }
-    section.page > h2 { font-size: 1.3rem; }
-    .card { padding: 15px 16px; }
-    section.agent { padding: 22px 16px; }
+    .topbar-inner { padding: 0 14px; }
+    .wrap { padding: 0 14px; }
+    .page-shell { padding-top: calc(var(--header-h) + 20px); }
+    .card { padding: 15px 15px; border-radius: 14px; }
+    .kpi-val { font-size: 18px; }
+    .prism-fab { right: 14px; bottom: 14px; padding: 8px 12px 8px 9px; }
+    .prism-fab .fab-label { display: none; }
+    .prism-fab { padding: 9px; }
   }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <h1>Homebuying Guide — 6 Months</h1>
-    <p class="sub">A step-by-step plan for buying a home in six months: three months of planning, two months of shopping, and one month of closing.</p>
-    <div class="phases">
-      <span>Planning — 3 months</span>
-      <span>Shopping — 2 months</span>
-      <span>Closing — 1 month</span>
+<!-- ===================== Fixed Header ===================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <a class="brand" href="#top" aria-label="Homebuying Guide Home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 64 64" fill="none">
+            <polygon points="32,4 56,18 56,46 32,60 8,46 8,18" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/>
+            <polygon points="32,16 47,27 47,45 17,45 17,27" fill="#00C805"/>
+            <polygon points="32,16 47,27 32,33 17,27" fill="#5BFF5E" fill-opacity="0.8"/>
+            <rect x="28" y="34" width="8" height="11" rx="1.5" fill="#0F172A"/>
+          </svg>
+        </span>
+        <span>homebuying</span>
+      </a>
+
+      <div class="search-wrap desktop-search">
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="desktopSearch" type="search" placeholder="Jump to day, tool, or topic…" autocomplete="off" aria-label="Search guide">
+          <span class="search-kbd">/</span>
+        </div>
+        <div id="desktopSearchResults" class="search-results" role="listbox" aria-label="Search results"></div>
+      </div>
+    </div>
+
+    <nav class="desktop-nav" aria-label="Guide sections">
+      <a class="nav-link active" href="#overview">Overview</a>
+      <a class="nav-link" href="#planning">Planning</a>
+      <a class="nav-link" href="#shopping">Shopping</a>
+      <a class="nav-link" href="#closing">Closing</a>
+      <a class="nav-link" href="#reading">Reading</a>
+      <a class="nav-link" href="#calculators">Calculators</a>
+      <button type="button" class="lime-pill" data-open-agent>
+        <span>Research Agent</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="themeToggleDesktop" aria-label="Switch theme" title="Toggle Dark / Light mode"></button>
+    </nav>
+
+    <div class="compact-actions">
+      <button type="button" class="lime-pill" data-open-agent>
+        <span>Agent</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="mobileSearchBtn" aria-label="Search guide" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="themeToggleMobile" aria-label="Switch theme" title="Toggle Dark / Light mode"></button>
+      <div class="menu-wrap">
+        <button type="button" class="icon-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+        <div class="menu-pop" id="mobileMenu" role="menu" aria-label="Guide sections">
+          <a href="#overview" role="menuitem" class="active">Overview</a>
+          <a href="#planning" role="menuitem">Planning Phase (3 Mo)</a>
+          <a href="#shopping" role="menuitem">Shopping Phase (2 Mo)</a>
+          <a href="#closing" role="menuitem">Closing Phase (1 Mo)</a>
+          <div class="menu-sep"></div>
+          <a href="#reading" role="menuitem">Reading Resources</a>
+          <a href="#calculators" role="menuitem">Calculators &amp; References</a>
+          <div class="menu-sep"></div>
+          <button type="button" role="menuitem" data-open-agent>Open Research Agent ↗</button>
+          <button type="button" role="menuitem" id="installAppBtn" style="display:none;color:var(--gain);font-weight:700;">Install App ↓</button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
 
-<nav class="toc" aria-label="Guide sections">
-  <div class="wrap">
-    <a href="#overview">Overview</a>
-    <a href="#planning">Planning</a>
-    <a href="#shopping">Shopping</a>
-    <a href="#closing">Closing</a>
-    <a href="#reading">Reading</a>
-    <a href="#calculators">Calculators</a>
-    <a href="#agent">Research Agent</a>
+<div class="mobile-search-bar" id="mobileSearchBar">
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="mobileSearch" type="search" placeholder="Jump to day, tool, or topic…" autocomplete="off" aria-label="Search guide">
+    </div>
+    <div id="mobileSearchResults" class="search-results" role="listbox" aria-label="Search results"></div>
   </div>
-</nav>
+</div>
 
+<!-- ===================== Main Content ===================== -->
+<div class="page-shell" id="top">
 <main class="wrap">
 
-<section class="page" id="overview">
-  <h2>Homebuying Guide - 6 Months</h2>
+  <!-- Hero & Dashboard Overview -->
+  <div class="hero">
+    <div class="kicker">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span>6-Month Playbook · Interactive Checklist</span>
+    </div>
+    <h1>Homebuying Guide — 6 Months</h1>
+    <p class="hero-sub prose">A step-by-step plan for buying a home in six months: three months of planning, two months of shopping, and one month of closing — with an integrated web-grounded research agent.</p>
 
-  <div class="card">
-    <h3>3 Rules for HomeBuying</h3>
-    <ol>
-      <li>Plan to hold for 5 years or more
-        <ul>
-          <li><strong>Why</strong>: When home prices have dipped, that dip has been roughly about 5 years. That way you don’t lose money.</li>
-        </ul>
-      </li>
-      <li>Be comfortable in your budget</li>
-      <li>3 months expenses saved</li>
-    </ol>
-  </div>
+    <div class="kpi-grid" aria-label="Sample targets from Day 26">
+      <div class="kpi-card">
+        <div class="kpi-label">Monthly Target</div>
+        <div class="kpi-val tabular-nums">$4,000</div>
+        <div class="kpi-sub">Max monthly payment</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Price Range</div>
+        <div class="kpi-val tabular-nums">$1,200,000</div>
+        <div class="kpi-sub">Max purchase price</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Cash To Close</div>
+        <div class="kpi-val tabular-nums">$230k</div>
+        <div class="kpi-sub">$200k down + $30k closing</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Moving Budget</div>
+        <div class="kpi-val tabular-nums">$5,000</div>
+        <div class="kpi-sub">Day 26 moving-in target</div>
+      </div>
+    </div>
 
-  <a class="videocard" href="https://www.youtube.com/watch?v=HfHNQWUoKdc" target="_blank" rel="noopener">
-    <span class="play">▶</span>
-    <span><span class="vt">First Time Home Buyer Q&amp;A</span><br>
-    <span class="vu">https://www.youtube.com/watch?v=HfHNQWUoKdc</span></span>
-  </a>
-
-  <a class="videocard" href="https://www.youtube.com/watch?v=CdZBMa0kJvA&amp;t=753s" target="_blank" rel="noopener">
-    <span class="play">▶</span>
-    <span><span class="vt">Watch</span><br>
-    <span class="vu">https://www.youtube.com/watch?v=CdZBMa0kJvA&amp;t=753s</span></span>
-  </a>
-
-  <div class="card">
-    <h3>The plan</h3>
-    <ol>
-      <li><a href="#planning">Planning Phase (3 Months)</a></li>
-      <li><a href="#shopping">Shopping Phase (2 Months)</a></li>
-      <li><a href="#closing">Closing Phase (1 Month)</a></li>
-      <li><a href="#reading">Additional Reading Resources</a></li>
-      <li><a href="#calculators">Calculators &amp; References</a></li>
-    </ol>
-  </div>
-</section>
-
-<section class="page" id="planning">
-  <h2>Planning Phase (3 Months)</h2>
-
-  <div class="card">
-    <h3>Day 1 - Write down your "Why"</h3>
-    <ul>
-      <li>Write it down on paper with your partner</li>
-      <li>Remind yourself why you’re actually purchasing</li>
-      <li>Don’t get swept up in FOMO</li>
-      <li>Without a why, budget creep will be high!</li>
-      <li>Examples: Want to be done with renting, Relocating because of Job or Family, Need more space due to a growing family, Need an office due to transitioning to WFH, Health reasons, More privacy, Schooldistricts that are preferred etc</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 2 - Budget Clean-Up</h3>
-    <ul>
-      <li>Consider a budgeting software (what’s coming in and what’s going out on a monthly basis)</li>
-      <li>Trick to find a comfortable payment without a budget</li>
-      <li>What is and isn’t working?
-        <ul>
-          <li>Is there a leak in your budget?</li>
-          <li>Are you actually able to save?</li>
-        </ul>
-      </li>
-      <li>Debt assessment - is now a good time to make a large purchase?</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 3 - Guard Your Headspace</h3>
-    <ul>
-      <li>Consider where you want to get home buying news from, don’t let it just come to you</li>
-      <li>Unsubscribe from channels, block accounts etc</li>
-      <li>Stick to your goals and only rely on news to actually gather info you’re seeking
-        <ul>
-          <li>Most news is out to making you afraid and fearful, so don’t get swept away at that</li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 5 - 15 - Polish Your Credit</h3>
-    <ul>
-      <li>Doing this early will give you time to get your best score as quickly as possible</li>
-      <li><strong>Resource</strong>: 10 day credit plan — see the video below</li>
-    </ul>
-  </div>
-
-  <a class="videocard" href="https://www.youtube.com/watch?v=AoSynOFmxnY&amp;t=0s" target="_blank" rel="noopener">
-    <span class="play">▶</span>
-    <span><span class="vt">EASY 10 DAY PLAN — How To Get A Perfe...</span><br>
-    <span class="vu">https://www.youtube.com/watch?v=AoSynOFmxnY&amp;t=0s</span></span>
-  </a>
-
-  <div class="card">
-    <h3>Day 20 - Gather Your Documents</h3>
-    <ul>
-      <li>ID (DL, Passport)</li>
-      <li>Past 2 years:
-        <ul>
-          <li>Tax Returns</li>
-          <li>W2s/1099s</li>
-        </ul>
-      </li>
-      <li>Recently monthly bank statements (or other accounts for down payment)</li>
-      <li>Most recent paystub (if applicable)</li>
-      <li><strong>Tip</strong>: Put it in Google Drive (share to loan officer)</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 22 - Prevent Spam Calls / Texts</h3>
-    <ul>
-      <li>(Trigger Leads) Credit Unions sell your information to other lenders - Can go to upto 50 or 70 calls a day!!</li>
-      <li><a href="https://www.optoutprescreen.com/" target="_blank" rel="noopener">OptOutPrescreen.com</a></li>
-      <li><a href="https://www.donotcall.gov/" target="_blank" rel="noopener">DoNotCall.gov</a></li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 25 - Talk With a Loan Officer</h3>
-    <ul>
-      <li>Schedule a call with us (Real Estate Agent - winthehouseyoulove)
-        <ul>
-          <li>Licensed in all 50 states</li>
-          <li>Consultation Call to find the best loan that makes sense for you</li>
-          <li>1 application, one credit pull, 70 lenders</li>
-          <li>Federally Charted Bank through Allied First Bank</li>
-        </ul>
-      </li>
-      <li>Verify what you can get approved for (before the loan officer)</li>
-      <li>See your rate, monthly payment, price range and est. out of pocket expenses</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 26 - Create Your Targets</h3>
-    <ul>
-      <li><strong>Resource</strong>: <a href="https://www.winthehouseyoulove.com/tools/max-purchase-price-calculator" target="_blank" rel="noopener">winthehouseyoulove.com/maxprice</a>
-        <ul><li>Code: KYLE for 20% off</li></ul>
-      </li>
-    </ul>
-    <div class="tablewrap">
-    <table>
-      <tr><th>Target</th><th>Amount</th></tr>
-      <tr><td>Monthly Payment</td><td>$4,000 max</td></tr>
-      <tr><td>Price Range</td><td>$1,200,000 max</td></tr>
-      <tr><td>Cash To Close</td><td>$200k down + $30k closing</td></tr>
-      <tr><td>Moving In</td><td>$5k moving budget</td></tr>
-    </table>
+    <div class="progress-card">
+      <div class="progress-top">
+        <div class="progress-title">
+          <span>Checklist Progress</span>
+          <span class="progress-pct tabular-nums" id="progressPct">0%</span>
+        </div>
+        <div class="progress-meta">
+          <span class="tabular-nums" id="progressCount">0 / 19 steps done</span>
+          <button type="button" class="reset-btn" id="resetProgress">Reset</button>
+        </div>
+      </div>
+      <div class="ps5-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+        <div class="ps5-fill" id="progressFill"></div>
+      </div>
+      <div class="phase-pills">
+        <a class="phase-pill" href="#planning">
+          <span>01 · Planning</span>
+          <span class="dur">3 months</span>
+        </a>
+        <a class="phase-pill" href="#shopping">
+          <span>02 · Shopping</span>
+          <span class="dur">2 months</span>
+        </a>
+        <a class="phase-pill" href="#closing">
+          <span>03 · Closing</span>
+          <span class="dur">1 month</span>
+        </a>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <h3>Day 27 - Start Practice Payments (Stress Testing)</h3>
-    <ul>
-      <li>Act like you already have your mortgage payment (if higher)</li>
-      <li>Save the difference of your rent and est. mortgage payment into a savings account and don’t touch it</li>
-      <li>See if the payment creates tension in your budget</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 28 - Create Your Savings Plan</h3>
-    <ul>
-      <li>Practice Payments</li>
-      <li><strong>Example:</strong>
-        <ul>
-          <li>Needed - Saved = Remaining</li>
-          <li>$18,000 (Needed) - $8,000 (Saved) = $10,000 (Remaining)</li>
-          <li>$10,000 (Remaining) / 5 Months = $2,000/month (Savings Needed)</li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 30 - Dream, seriously</h3>
-    <ul>
-      <li>We need to do the full home buying dream thing so we can get to the realistic stuff without the baggage</li>
-      <li>Go to open houses for fun</li>
-      <li>Scroll, scroll, scroll (on Zillow)</li>
-      <li>Screenshot and make a folder of houses you love</li>
-      <li>Get it out of your system, feel through it</li>
-      <li>Get it out of your system and come back to what is practically feasible</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 35 - Decide What You Want</h3>
-    <ul>
-      <li>Neighborhood research
-        <ul>
-          <li>Walking</li>
-          <li>Driving by at different times of day</li>
-          <li>Talking to people in the community</li>
-          <li>Safety, School Districts, Proximity to work</li>
-        </ul>
-      </li>
-      <li>Open Houses</li>
-      <li>Create Needs / Wants List
-        <ul>
-          <li><em>Needs</em> need to accomplish why you’re buying the house. Those are not negotiable</li>
-          <li><em>Wants</em> can be compromised on. How to solve for non-needs so that everyone is happy?</li>
-          <li>What will you compromise on?</li>
-          <li>Allow room to grow and expand - Sometimes first homes aren’t what you always want. Second homes and third homes aligns more and more with what you want</li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 40 - Plan Your Exit</h3>
-    <ul>
-      <li>How will you get out of your lease?
-        <ul>
-          <li>Make remaining payments</li>
-          <li>Negotiate a buyout</li>
-          <li>Have someone take over the lease</li>
-        </ul>
-      </li>
-      <li>Will you sell or rent?
-        <ul>
-          <li>Do you need money from the sale?</li>
-          <li>Can you afford 2 mortgage payments?</li>
-          <li>Will your offer be contingent?</li>
-        </ul>
-      </li>
-      <li>Create a fallback plan if buying doesn’t work out</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 50 - Talk With A Real Estate Agent</h3>
-    <p><strong>Resource</strong>: <a href="https://homeandmoney.com/kyle/" target="_blank" rel="noopener">winthehouseyoulove.com/agent</a></p>
-    <p>Agent will ask for a pre-qualification letter</p>
-  </div>
-
-  <div class="card">
-    <h3>Day 55 - Get A Home Inspector</h3>
-    <ul>
-      <li>You won’t need them until you’re under contract on a home</li>
-      <li>Get recommendations from your real estate agent</li>
-      <li>Explore online reviews</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Day 60 - Organize Moving Logistics</h3>
-    <ul>
-      <li>Moving company - get quotes if needed</li>
-      <li>Recruit friends early and honestly (don’t rope in the pickup truck guy)</li>
-      <li>Explore local truck rental options if needed</li>
-      <li>(When ready) Begin packing non-essentials early - do it in stages instead of the one TERRIBLE weekend</li>
-    </ul>
-  </div>
-</section>
-
-<section class="page" id="shopping">
-  <h2>Shopping Phase (2 Months)</h2>
-
-  <div class="card">
-    <h3>Explore Homes</h3>
-    <ul>
-      <li>Talk with your agent about your entire situation
-        <ul>
-          <li>Ask them “how realistic is this?”</li>
-          <li>“What might I compromise on?”</li>
-        </ul>
-      </li>
-      <li>Realistically look at homes online</li>
-      <li>Visit at least 3 open houses</li>
-      <li>Walk neighborhoods you’re looking in and narrow the pockets you want to buy in</li>
-      <li>Schedule showings of homes you like</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Review Comps (Comparable Homes)</h3>
-    <ul>
-      <li>Once you found a house you’re super interested!</li>
-      <li>Have your agent “pull comps” to validate the value &amp; structure an offer</li>
-      <li>Schedule showing with agent to see the home</li>
-      <li>(You’re ready to take action at this stage because of all the prep)</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>Make An Offer</h3>
-    <ul>
-      <li>When you’re ready!</li>
-      <li>This is called being “under contract”</li>
-    </ul>
-  </div>
-</section>
-
-<section class="page" id="closing">
-  <h2>Closing Phase (1 Month)</h2>
-
-  <div class="card">
-    <div class="tablewrap">
-    <table>
-      <tr><th>Stage</th><th>Responsible</th></tr>
-      <tr><td>Seller accepts your offer</td><td>Seller | Your Agent</td></tr>
-      <tr><td>Initial docs &amp; updated docs</td><td>Lender | You</td></tr>
-      <tr><td>Home inspection</td><td>Home Inspector | Seller’s Agent</td></tr>
-      <tr><td>Title Search</td><td>Lender | Title Company</td></tr>
-      <tr><td>Conditional approval</td><td>Lender</td></tr>
-      <tr><td>Home Appraisal</td><td>Lender | Appraiser | Seller’s Agent</td></tr>
-      <tr><td>Arrange utility transfer</td><td>You</td></tr>
-      <tr><td>Review Final Numbers</td><td>Lender | You</td></tr>
-      <tr><td>Sign Final Docs (Closing)</td><td>Lender | You | Agent</td></tr>
-      <tr><td>Move In</td><td>You</td></tr>
-    </table>
+  <!-- ===================== OVERVIEW ===================== -->
+  <section class="page" id="overview">
+    <div class="sec-head">
+      <div class="sec-head-row">
+        <h2>Homebuying Guide - 6 Months</h2>
+      </div>
+      <span class="sec-sub">Core principles and roadmap before Day 1 begins.</span>
     </div>
-  </div>
 
-  <div class="card">
-    <h3>Your First Payment</h3>
-    <ul>
-      <li>One full month gap minimum</li>
-      <li>Closing Date → First Payment</li>
-      <li>3/2 ——————→ 5/1</li>
-      <li>6/16 —————→ 8/1</li>
-      <li>8/28 —————&gt; 10/1</li>
-    </ul>
-  </div>
-</section>
+    <div class="overview-grid">
+      <div class="card">
+        <div class="card-head">
+          <h3 class="card-title">3 Rules for HomeBuying</h3>
+        </div>
+        <div class="prose">
+          <ol>
+            <li>Plan to hold for 5 years or more
+              <ul>
+                <li><strong>Why</strong>: When home prices have dipped, that dip has been roughly about 5 years. That way you don’t lose money.</li>
+              </ul>
+            </li>
+            <li>Be comfortable in your budget</li>
+            <li>3 months expenses saved</li>
+          </ol>
+        </div>
+      </div>
 
-<section class="page" id="reading">
-  <h2>Additional Reading Resources</h2>
+      <div class="card">
+        <div class="card-head">
+          <h3 class="card-title">The plan</h3>
+        </div>
+        <ol class="plan-list">
+          <li><a href="#planning"><span><span class="plan-num">01</span>Planning Phase (3 Months)</span><span>→</span></a></li>
+          <li><a href="#shopping"><span><span class="plan-num">02</span>Shopping Phase (2 Months)</span><span>→</span></a></li>
+          <li><a href="#closing"><span><span class="plan-num">03</span>Closing Phase (1 Month)</span><span>→</span></a></li>
+          <li><a href="#reading"><span><span class="plan-num">04</span>Additional Reading Resources</span><span>→</span></a></li>
+          <li><a href="#calculators"><span><span class="plan-num">05</span>Calculators &amp; References</span><span>→</span></a></li>
+        </ol>
+      </div>
+    </div>
 
-  <div class="card">
-    <a class="reslink" href="https://www.investopedia.com/homebuying-guide-4776300" target="_blank" rel="noopener">
-      <span class="rl">Home buying guide</span>
-      <span class="ru">https://www.investopedia.com/homebuying-guide-4776300</span>
-    </a>
-    <a class="reslink" href="https://www.car.org/marketdata/interactive/buyersguide" target="_blank" rel="noopener">
-      <span class="rl">Visual guide</span>
-      <span class="ru">https://www.car.org/marketdata/interactive/buyersguide</span>
-    </a>
-    <a class="reslink" href="https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/" target="_blank" rel="noopener">
-      <span class="rl">10 things to know about buying in Bay Area</span>
-      <span class="ru">https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/</span>
-    </a>
-    <a class="reslink" href="https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&amp;filetype=msword" target="_blank" rel="noopener">
-      <span class="rl">Buyers preparation checklist</span>
-      <span class="ru">https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&amp;filetype=msword</span>
-    </a>
-  </div>
-</section>
+    <div class="video-grid">
+      <a class="videocard" href="https://www.youtube.com/watch?v=HfHNQWUoKdc" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true">▶</span>
+        <span class="vmeta">
+          <span class="vt">First Time Home Buyer Q&amp;A</span>
+          <span class="vu">youtube.com/watch?v=HfHNQWUoKdc</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
 
-<section class="page" id="calculators">
-  <h2>Calculators &amp; References</h2>
+      <a class="videocard" href="https://www.youtube.com/watch?v=CdZBMa0kJvA&amp;t=753s" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true">▶</span>
+        <span class="vmeta">
+          <span class="vt">Watch</span>
+          <span class="vu">youtube.com/watch?v=CdZBMa0kJvA&amp;t=753s</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
 
-  <div class="card">
-    <a class="reslink" href="https://www.winthehouseyoulove.com/lender" target="_blank" rel="noopener">
-      <span class="rl">Get Pre-Approved With My Team</span>
-      <span class="ru">https://www.winthehouseyoulove.com/lender</span>
-    </a>
-    <a class="reslink" href="https://www.winthehouseyoulove.com/agent" target="_blank" rel="noopener">
-      <span class="rl">Get An Agent Referral</span>
-      <span class="ru">https://www.winthehouseyoulove.com/agent</span>
-    </a>
-    <a class="reslink" href="https://www.winthehouseyoulove.com/rates" target="_blank" rel="noopener">
-      <span class="rl">📉 Today’s Rates</span>
-      <span class="ru">https://www.winthehouseyoulove.com/rates</span>
-    </a>
-    <a class="reslink" href="https://www.winthehouseyoulove.com/maxprice" target="_blank" rel="noopener">
-      <span class="rl">🏡 Max Purchase Price Calculator</span>
-      <span class="ru">https://www.winthehouseyoulove.com/maxprice</span>
-    </a>
-    <a class="reslink" href="https://www.winthehouseyoulove.com/advisor" target="_blank" rel="noopener">
-      <span class="rl">📊 Loan Comparison Calculator</span>
-      <span class="ru">https://www.winthehouseyoulove.com/advisor</span>
-    </a>
-    <a class="reslink" href="https://www.winthehouseyoulove.com/timeline" target="_blank" rel="noopener">
-      <span class="rl">📅 Complete Buying Timeline</span>
-      <span class="ru">https://www.winthehouseyoulove.com/timeline</span>
-    </a>
-    <a class="reslink" href="https://www.winthehouseyoulove.com/student" target="_blank" rel="noopener">
-      <span class="rl">🎓 Lower Student Loan Payments</span>
-      <span class="ru">https://www.winthehouseyoulove.com/student</span>
-    </a>
-    <a class="reslink" href="https://www.winthehouseyoulove.com/credit" target="_blank" rel="noopener">
-      <span class="rl">💳 Credit Score Simulator</span>
-      <span class="ru">https://www.winthehouseyoulove.com/credit</span>
-    </a>
-  </div>
+    <div class="sec-footer">
+      <span>Check off steps as you complete them — progress saves locally in your browser.</span>
+      <button type="button" class="ask-link" data-ask="How do the 3 rules for homebuying apply in today's market?">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span>Ask Agent</span>
+      </button>
+    </div>
+  </section>
 
-  <a class="videocard" href="https://www.youtube.com/watch?v=HfHNQWUoKdc" target="_blank" rel="noopener">
-    <span class="play">▶</span>
-    <span><span class="vt">First Time Home Buyer Q&amp;A</span><br>
-    <span class="vu">https://www.youtube.com/watch?v=HfHNQWUoKdc</span></span>
-  </a>
-</section>
+  <!-- ===================== PLANNING PHASE ===================== -->
+  <section class="page" id="planning">
+    <div class="sec-head">
+      <div class="sec-head-row">
+        <h2>Planning Phase (3 Months)</h2>
+        <div class="segmented" role="group" aria-label="Filter planning steps">
+          <button type="button" class="seg-btn" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="seg-btn" data-filter="remaining" aria-pressed="false">Remaining</button>
+          <button type="button" class="seg-btn" data-filter="done" aria-pressed="false">Done</button>
+        </div>
+      </div>
+      <span class="sec-sub">Day 1 to Day 60 — mindset, budget, credit, documents, loan targets, and team setup.</span>
+    </div>
 
-<section class="agent" id="agent">
-  <h2>Research Agent</h2>
-  <p class="lede">Ask about any homebuying topic. The agent reads the full guide on this page first, then researches the current web with Google Search, and keeps the two apart.</p>
+    <div class="card step-card" id="day-1" data-step="day-1" data-search="Day 1 Write down your Why FOMO budget creep">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 1 complete">✓</button>
+          <div>
+            <h3 class="card-title">Write down your "Why"</h3>
+          </div>
+        </div>
+        <span class="day-badge">DAY 01</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Write it down on paper with your partner</li>
+          <li>Remind yourself why you’re actually purchasing</li>
+          <li>Don’t get swept up in FOMO</li>
+          <li>Without a why, budget creep will be high!</li>
+          <li>Examples: Want to be done with renting, Relocating because of Job or Family, Need more space due to a growing family, Need an office due to transitioning to WFH, Health reasons, More privacy, Schooldistricts that are preferred etc</li>
+        </ul>
+      </div>
+    </div>
 
-  <label for="apiKey">Google AI API key</label>
-  <input type="password" id="apiKey" autocomplete="off" placeholder="Paste your Google AI API key">
-  <p class="note">Your key stays in this browser tab only (sessionStorage). The page sends it only to generativelanguage.googleapis.com, with your research request. The page stores it nowhere else and sends it to no other service.</p>
+    <div class="card step-card" id="day-2" data-step="day-2" data-search="Day 2 Budget Clean-Up budgeting software debt assessment">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 2 complete">✓</button>
+          <div><h3 class="card-title">Budget Clean-Up</h3></div>
+        </div>
+        <span class="day-badge">DAY 02</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Consider a budgeting software (what’s coming in and what’s going out on a monthly basis)</li>
+          <li>Trick to find a comfortable payment without a budget</li>
+          <li>What is and isn’t working?
+            <ul>
+              <li>Is there a leak in your budget?</li>
+              <li>Are you actually able to save?</li>
+            </ul>
+          </li>
+          <li>Debt assessment - is now a good time to make a large purchase?</li>
+        </ul>
+      </div>
+    </div>
 
-  <label for="topic">Research topic</label>
-  <textarea id="topic" placeholder="Example: Current first-time buyer programs in California, or: how trigger leads work and how to stop them"></textarea>
+    <div class="card step-card" id="day-3" data-step="day-3" data-search="Day 3 Guard Your Headspace news unsubscribe">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 3 complete">✓</button>
+          <div><h3 class="card-title">Guard Your Headspace</h3></div>
+        </div>
+        <span class="day-badge">DAY 03</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Consider where you want to get home buying news from, don’t let it just come to you</li>
+          <li>Unsubscribe from channels, block accounts etc</li>
+          <li>Stick to your goals and only rely on news to actually gather info you’re seeking
+            <ul>
+              <li>Most news is out to making you afraid and fearful, so don’t get swept away at that</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-  <button id="runAgent" type="button">Research this topic</button>
-  <div id="agentStatus" role="status"></div>
-  <div id="agentAnswer"></div>
-  <div id="agentSources"></div>
-</section>
+    <div class="card step-card" id="day-5" data-step="day-5" data-search="Day 5 15 Polish Your Credit score 10 day credit plan">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 5-15 complete">✓</button>
+          <div><h3 class="card-title">Polish Your Credit</h3></div>
+        </div>
+        <span class="day-badge">DAY 05–15</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Doing this early will give you time to get your best score as quickly as possible</li>
+          <li><strong>Resource</strong>: 10 day credit plan — see the video below</li>
+        </ul>
+      </div>
+      <div style="margin-top: 12px;">
+        <a class="videocard" href="https://www.youtube.com/watch?v=AoSynOFmxnY&amp;t=0s" target="_blank" rel="noopener">
+          <span class="play" aria-hidden="true">▶</span>
+          <span class="vmeta">
+            <span class="vt">EASY 10 DAY PLAN — How To Get A Perfe...</span>
+            <span class="vu">youtube.com/watch?v=AoSynOFmxnY&amp;t=0s</span>
+          </span>
+          <span class="res-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
 
-</main>
+    <div class="card step-card" id="day-20" data-step="day-20" data-search="Day 20 Gather Your Documents ID Passport Tax Returns W2 1099 bank statements paystub Google Drive">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 20 complete">✓</button>
+          <div><h3 class="card-title">Gather Your Documents</h3></div>
+        </div>
+        <span class="day-badge">DAY 20</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>ID (DL, Passport)</li>
+          <li>Past 2 years:
+            <ul>
+              <li>Tax Returns</li>
+              <li>W2s/1099s</li>
+            </ul>
+          </li>
+          <li>Recently monthly bank statements (or other accounts for down payment)</li>
+          <li>Most recent paystub (if applicable)</li>
+          <li><strong>Tip</strong>: Put it in Google Drive (share to loan officer)</li>
+        </ul>
+      </div>
+    </div>
 
-<footer>
-  <div class="wrap">
+    <div class="card step-card" id="day-22" data-step="day-22" data-search="Day 22 Prevent Spam Calls Texts Trigger Leads OptOutPrescreen DoNotCall">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 22 complete">✓</button>
+          <div><h3 class="card-title">Prevent Spam Calls / Texts</h3></div>
+        </div>
+        <span class="day-badge">DAY 22</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>(Trigger Leads) Credit Unions sell your information to other lenders - Can go to upto 50 or 70 calls a day!!</li>
+          <li><a href="https://www.optoutprescreen.com/" target="_blank" rel="noopener">OptOutPrescreen.com</a></li>
+          <li><a href="https://www.donotcall.gov/" target="_blank" rel="noopener">DoNotCall.gov</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-25" data-step="day-25" data-search="Day 25 Talk With a Loan Officer pre-approval rate monthly payment Allied First Bank winthehouseyoulove">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 25 complete">✓</button>
+          <div><h3 class="card-title">Talk With a Loan Officer</h3></div>
+        </div>
+        <span class="day-badge">DAY 25</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Schedule a call with us (Real Estate Agent - winthehouseyoulove)
+            <ul>
+              <li>Licensed in all 50 states</li>
+              <li>Consultation Call to find the best loan that makes sense for you</li>
+              <li>1 application, one credit pull, 70 lenders</li>
+              <li>Federally Charted Bank through Allied First Bank</li>
+            </ul>
+          </li>
+          <li>Verify what you can get approved for (before the loan officer)</li>
+          <li>See your rate, monthly payment, price range and est. out of pocket expenses</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-26" data-step="day-26" data-search="Day 26 Create Your Targets Monthly Payment Price Range Cash To Close Moving In maxprice">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 26 complete">✓</button>
+          <div><h3 class="card-title">Create Your Targets</h3></div>
+        </div>
+        <span class="day-badge">DAY 26</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li><strong>Resource</strong>: <a href="https://www.winthehouseyoulove.com/tools/max-purchase-price-calculator" target="_blank" rel="noopener">winthehouseyoulove.com/maxprice</a>
+            <ul><li>Code: KYLE for 20% off</li></ul>
+          </li>
+        </ul>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Target</th><th>Amount</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Monthly Payment</td><td class="tabular-nums">$4,000 max</td></tr>
+            <tr><td>Price Range</td><td class="tabular-nums">$1,200,000 max</td></tr>
+            <tr><td>Cash To Close</td><td class="tabular-nums">$200k down + $30k closing</td></tr>
+            <tr><td>Moving In</td><td class="tabular-nums">$5k moving budget</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-27" data-step="day-27" data-search="Day 27 Start Practice Payments Stress Testing mortgage rent">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 27 complete">✓</button>
+          <div><h3 class="card-title">Start Practice Payments (Stress Testing)</h3></div>
+        </div>
+        <span class="day-badge">DAY 27</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Act like you already have your mortgage payment (if higher)</li>
+          <li>Save the difference of your rent and est. mortgage payment into a savings account and don’t touch it</li>
+          <li>See if the payment creates tension in your budget</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-28" data-step="day-28" data-search="Day 28 Create Your Savings Plan Needed Saved Remaining">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 28 complete">✓</button>
+          <div><h3 class="card-title">Create Your Savings Plan</h3></div>
+        </div>
+        <span class="day-badge">DAY 28</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Practice Payments</li>
+          <li><strong>Example:</strong>
+            <ul>
+              <li>Needed - Saved = Remaining</li>
+              <li>$18,000 (Needed) - $8,000 (Saved) = $10,000 (Remaining)</li>
+              <li>$10,000 (Remaining) / 5 Months = $2,000/month (Savings Needed)</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-30" data-step="day-30" data-search="Day 30 Dream seriously Zillow open houses">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 30 complete">✓</button>
+          <div><h3 class="card-title">Dream, seriously</h3></div>
+        </div>
+        <span class="day-badge">DAY 30</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>We need to do the full home buying dream thing so we can get to the realistic stuff without the baggage</li>
+          <li>Go to open houses for fun</li>
+          <li>Scroll, scroll, scroll (on Zillow)</li>
+          <li>Screenshot and make a folder of houses you love</li>
+          <li>Get it out of your system, feel through it</li>
+          <li>Get it out of your system and come back to what is practically feasible</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-35" data-step="day-35" data-search="Day 35 Decide What You Want Neighborhood research Needs Wants School Districts">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 35 complete">✓</button>
+          <div><h3 class="card-title">Decide What You Want</h3></div>
+        </div>
+        <span class="day-badge">DAY 35</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Neighborhood research
+            <ul>
+              <li>Walking</li>
+              <li>Driving by at different times of day</li>
+              <li>Talking to people in the community</li>
+              <li>Safety, School Districts, Proximity to work</li>
+            </ul>
+          </li>
+          <li>Open Houses</li>
+          <li>Create Needs / Wants List
+            <ul>
+              <li><em>Needs</em> need to accomplish why you’re buying the house. Those are not negotiable</li>
+              <li><em>Wants</em> can be compromised on. How to solve for non-needs so that everyone is happy?</li>
+              <li>What will you compromise on?</li>
+              <li>Allow room to grow and expand - Sometimes first homes aren’t what you always want. Second homes and third homes aligns more and more with what you want</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-40" data-step="day-40" data-search="Day 40 Plan Your Exit lease buyout sell rent contingent">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 40 complete">✓</button>
+          <div><h3 class="card-title">Plan Your Exit</h3></div>
+        </div>
+        <span class="day-badge">DAY 40</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>How will you get out of your lease?
+            <ul>
+              <li>Make remaining payments</li>
+              <li>Negotiate a buyout</li>
+              <li>Have someone take over the lease</li>
+            </ul>
+          </li>
+          <li>Will you sell or rent?
+            <ul>
+              <li>Do you need money from the sale?</li>
+              <li>Can you afford 2 mortgage payments?</li>
+              <li>Will your offer be contingent?</li>
+            </ul>
+          </li>
+          <li>Create a fallback plan if buying doesn’t work out</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-50" data-step="day-50" data-search="Day 50 Talk With A Real Estate Agent pre-qualification letter">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 50 complete">✓</button>
+          <div><h3 class="card-title">Talk With A Real Estate Agent</h3></div>
+        </div>
+        <span class="day-badge">DAY 50</span>
+      </div>
+      <div class="prose">
+        <p><strong>Resource</strong>: <a href="https://homeandmoney.com/kyle/" target="_blank" rel="noopener">winthehouseyoulove.com/agent</a></p>
+        <p>Agent will ask for a pre-qualification letter</p>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-55" data-step="day-55" data-search="Day 55 Get A Home Inspector under contract reviews">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 55 complete">✓</button>
+          <div><h3 class="card-title">Get A Home Inspector</h3></div>
+        </div>
+        <span class="day-badge">DAY 55</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>You won’t need them until you’re under contract on a home</li>
+          <li>Get recommendations from your real estate agent</li>
+          <li>Explore online reviews</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="day-60" data-step="day-60" data-search="Day 60 Organize Moving Logistics truck rental packing">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Day 60 complete">✓</button>
+          <div><h3 class="card-title">Organize Moving Logistics</h3></div>
+        </div>
+        <span class="day-badge">DAY 60</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Moving company - get quotes if needed</li>
+          <li>Recruit friends early and honestly (don’t rope in the pickup truck guy)</li>
+          <li>Explore local truck rental options if needed</li>
+          <li>(When ready) Begin packing non-essentials early - do it in stages instead of the one TERRIBLE weekend</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sec-footer">
+      <span>16 milestones across the first 3 months.</span>
+      <button type="button" class="ask-link" data-ask="How do mortgage trigger leads work and what are the latest rules to stop spam calls?">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span>Ask Agent about Planning</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== SHOPPING PHASE ===================== -->
+  <section class="page" id="shopping">
+    <div class="sec-head">
+      <div class="sec-head-row">
+        <h2>Shopping Phase (2 Months)</h2>
+      </div>
+      <span class="sec-sub">Months 4–5 — tour neighborhoods, pull comps, and submit a grounded offer.</span>
+    </div>
+
+    <div class="card step-card" id="shop-explore" data-step="shop-explore" data-search="Explore Homes open houses showings neighborhoods">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Explore Homes complete">✓</button>
+          <div><h3 class="card-title">Explore Homes</h3></div>
+        </div>
+        <span class="day-badge">STEP 01</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Talk with your agent about your entire situation
+            <ul>
+              <li>Ask them “how realistic is this?”</li>
+              <li>“What might I compromise on?”</li>
+            </ul>
+          </li>
+          <li>Realistically look at homes online</li>
+          <li>Visit at least 3 open houses</li>
+          <li>Walk neighborhoods you’re looking in and narrow the pockets you want to buy in</li>
+          <li>Schedule showings of homes you like</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="shop-comps" data-step="shop-comps" data-search="Review Comps Comparable Homes pull comps structure offer">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Review Comps complete">✓</button>
+          <div><h3 class="card-title">Review Comps (Comparable Homes)</h3></div>
+        </div>
+        <span class="day-badge">STEP 02</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>Once you found a house you’re super interested!</li>
+          <li>Have your agent “pull comps” to validate the value &amp; structure an offer</li>
+          <li>Schedule showing with agent to see the home</li>
+          <li>(You’re ready to take action at this stage because of all the prep)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card step-card" id="shop-offer" data-step="shop-offer" data-search="Make An Offer under contract">
+      <div class="card-head">
+        <div class="card-head-left">
+          <button type="button" class="check-btn" role="checkbox" aria-checked="false" aria-label="Mark Make An Offer complete">✓</button>
+          <div><h3 class="card-title">Make An Offer</h3></div>
+        </div>
+        <span class="day-badge">STEP 03</span>
+      </div>
+      <div class="prose">
+        <ul>
+          <li>When you’re ready!</li>
+          <li>This is called being “under contract”</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sec-footer">
+      <span>Once your offer is accepted, you enter the 1-month Closing Phase.</span>
+      <button type="button" class="ask-link" data-ask="What should a buyer look for when reviewing comparable home sales (comps) and structuring a competitive offer?">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span>Ask Agent about Comps &amp; Offers</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== CLOSING PHASE ===================== -->
+  <section class="page" id="closing">
+    <div class="sec-head">
+      <div class="sec-head-row">
+        <h2>Closing Phase (1 Month)</h2>
+      </div>
+      <span class="sec-sub">Month 6 — every closing stage, responsible parties, and how your first payment date is set.</span>
+    </div>
+
+    <div class="card" style="padding: 8px 14px;">
+      <div class="tablewrap" style="margin-top: 0;">
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>Responsible</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Seller accepts your offer</td>
+              <td><div class="role-tags"><span class="role-tag">Seller</span><span class="role-tag">Your Agent</span></div></td>
+            </tr>
+            <tr>
+              <td>Initial docs &amp; updated docs</td>
+              <td><div class="role-tags"><span class="role-tag">Lender</span><span class="role-tag you">You</span></div></td>
+            </tr>
+            <tr>
+              <td>Home inspection</td>
+              <td><div class="role-tags"><span class="role-tag">Home Inspector</span><span class="role-tag">Seller’s Agent</span></div></td>
+            </tr>
+            <tr>
+              <td>Title Search</td>
+              <td><div class="role-tags"><span class="role-tag">Lender</span><span class="role-tag">Title Company</span></div></td>
+            </tr>
+            <tr>
+              <td>Conditional approval</td>
+              <td><div class="role-tags"><span class="role-tag">Lender</span></div></td>
+            </tr>
+            <tr>
+              <td>Home Appraisal</td>
+              <td><div class="role-tags"><span class="role-tag">Lender</span><span class="role-tag">Appraiser</span><span class="role-tag">Seller’s Agent</span></div></td>
+            </tr>
+            <tr>
+              <td>Arrange utility transfer</td>
+              <td><div class="role-tags"><span class="role-tag you">You</span></div></td>
+            </tr>
+            <tr>
+              <td>Review Final Numbers</td>
+              <td><div class="role-tags"><span class="role-tag">Lender</span><span class="role-tag you">You</span></div></td>
+            </tr>
+            <tr>
+              <td>Sign Final Docs (Closing)</td>
+              <td><div class="role-tags"><span class="role-tag">Lender</span><span class="role-tag you">You</span><span class="role-tag">Agent</span></div></td>
+            </tr>
+            <tr>
+              <td>Move In</td>
+              <td><div class="role-tags"><span class="role-tag you">You</span></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" id="first-payment">
+      <div class="card-head">
+        <h3 class="card-title">Your First Payment</h3>
+        <span class="day-badge">1 FULL MONTH GAP MIN</span>
+      </div>
+      <div class="prose">
+        <p>One full month gap minimum — <strong>Closing Date → First Payment</strong>:</p>
+      </div>
+      <div class="payment-grid tabular-nums">
+        <div class="pay-chip"><span>3/2</span><span class="arrow">→</span><span>5/1</span></div>
+        <div class="pay-chip"><span>6/16</span><span class="arrow">→</span><span>8/1</span></div>
+        <div class="pay-chip"><span>8/28</span><span class="arrow">→</span><span>10/1</span></div>
+      </div>
+    </div>
+
+    <div class="sec-footer">
+      <span>Green badges mark stages where you take direct action.</span>
+      <button type="button" class="ask-link" data-ask="What are typical buyer closing costs and what should I check on the Closing Disclosure before signing?">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span>Ask Agent about Closing</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== READING RESOURCES ===================== -->
+  <section class="page" id="reading">
+    <div class="sec-head">
+      <div class="sec-head-row">
+        <h2>Additional Reading Resources</h2>
+      </div>
+      <span class="sec-sub">Guides, visual walkthroughs, Bay Area insights, and buyer checklists.</span>
+    </div>
+
+    <div class="card res-list">
+      <a class="reslink" href="https://www.investopedia.com/homebuying-guide-4776300" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">Home buying guide</span>
+          <span class="ru">https://www.investopedia.com/homebuying-guide-4776300</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.car.org/marketdata/interactive/buyersguide" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">Visual guide</span>
+          <span class="ru">https://www.car.org/marketdata/interactive/buyersguide</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">10 things to know about buying in Bay Area</span>
+          <span class="ru">https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&amp;filetype=msword" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">Buyers preparation checklist</span>
+          <span class="ru">https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&amp;filetype=msword</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================== CALCULATORS & REFERENCES ===================== -->
+  <section class="page" id="calculators">
+    <div class="sec-head">
+      <div class="sec-head-row">
+        <h2>Calculators &amp; References</h2>
+      </div>
+      <span class="sec-sub">Rate trackers, purchase price calculators, loan comparisons, and credit simulators.</span>
+    </div>
+
+    <div class="card res-list">
+      <a class="reslink" href="https://www.winthehouseyoulove.com/lender" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">Get Pre-Approved With My Team</span>
+          <span class="ru">https://www.winthehouseyoulove.com/lender</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.winthehouseyoulove.com/agent" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">Get An Agent Referral</span>
+          <span class="ru">https://www.winthehouseyoulove.com/agent</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.winthehouseyoulove.com/rates" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">📉 Today’s Rates</span>
+          <span class="ru">https://www.winthehouseyoulove.com/rates</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.winthehouseyoulove.com/maxprice" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">🏡 Max Purchase Price Calculator</span>
+          <span class="ru">https://www.winthehouseyoulove.com/maxprice</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.winthehouseyoulove.com/advisor" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">📊 Loan Comparison Calculator</span>
+          <span class="ru">https://www.winthehouseyoulove.com/advisor</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.winthehouseyoulove.com/timeline" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">📅 Complete Buying Timeline</span>
+          <span class="ru">https://www.winthehouseyoulove.com/timeline</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.winthehouseyoulove.com/student" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">🎓 Lower Student Loan Payments</span>
+          <span class="ru">https://www.winthehouseyoulove.com/student</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="reslink" href="https://www.winthehouseyoulove.com/credit" target="_blank" rel="noopener">
+        <span class="reslink-text">
+          <span class="rl">💳 Credit Score Simulator</span>
+          <span class="ru">https://www.winthehouseyoulove.com/credit</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="video-grid">
+      <a class="videocard" href="https://www.youtube.com/watch?v=HfHNQWUoKdc" target="_blank" rel="noopener">
+        <span class="play" aria-hidden="true">▶</span>
+        <span class="vmeta">
+          <span class="vt">First Time Home Buyer Q&amp;A</span>
+          <span class="vu">youtube.com/watch?v=HfHNQWUoKdc</span>
+        </span>
+        <span class="res-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================== RESEARCH AGENT LAUNCHER SECTION ===================== -->
+  <section class="agent-banner" id="agent">
+    <div class="agent-banner-top">
+      <div>
+        <div class="kicker" style="margin-bottom: 6px;">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>Gemini · Google Search Grounded</span>
+        </div>
+        <h2>Built-in Research Agent</h2>
+      </div>
+      <button type="button" class="primary-btn" data-open-agent>
+        <span>Open Research Panel</span>
+        <span>↗</span>
+      </button>
+    </div>
+    <p class="prose">Ask about any homebuying topic. The agent reads the full guide on this page first, then researches the current web with Google Search, and keeps guide guidance strictly separate from fresh findings.</p>
+    <div class="starter-chips">
+      <button type="button" class="chip-btn" data-ask="Current first-time homebuyer programs in California and the Bay Area">CA &amp; Bay Area buyer programs</button>
+      <button type="button" class="chip-btn" data-ask="How mortgage trigger leads work and how to stop spam calls">Stop trigger-lead spam calls</button>
+      <button type="button" class="chip-btn" data-ask="Current 30-year fixed vs 15-year fixed mortgage rates and conforming loan limits">Current rates &amp; loan limits</button>
+      <button type="button" class="chip-btn" data-ask="How to estimate closing costs on a $1.2M home purchase in California">Estimate $1.2M closing costs</button>
+    </div>
+  </section>
+
+  <footer>
     <p>Homebuying Guide — 6 Months. Guide content comes from the “Homebuying Guide - 6 Months” notes: Planning Phase (3 Months), Shopping Phase (2 Months), Closing Phase (1 Month), Additional Reading Resources, and Calculators &amp; References. Video links open on YouTube. Calculator and resource links open on their own sites.</p>
+  </footer>
+</main>
+</div>
+
+<!-- ===================== Floating Shimmering Prism Launcher (Curie FAB) ===================== -->
+<button type="button" class="prism-fab" data-open-agent aria-label="Open Research Agent">
+  <svg width="24" height="24" viewBox="0 0 64 64" fill="none" class="curie-prism-float" aria-hidden="true">
+    <defs>
+      <linearGradient id="fabTop" x1="8" y1="6" x2="56" y2="34" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#475569"/><stop offset="100%" stop-color="#1E293B"/>
+      </linearGradient>
+      <linearGradient id="fabCore" x1="12" y1="18" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#2EE632"/><stop offset="50%" stop-color="#00C805"/><stop offset="100%" stop-color="#009E04"/>
+      </linearGradient>
+    </defs>
+    <polygon points="32,4 56,18 32,32 8,18" fill="url(#fabTop)"/>
+    <polygon points="8,18 32,32 32,60 8,46" fill="#0F172A"/>
+    <polygon points="56,18 56,46 32,60 32,32" fill="#1E293B"/>
+    <polygon points="11.5,19.8 52.5,19.8 32,32" fill="#2EE632"/>
+    <polygon points="52.5,19.8 32,56 32,32" fill="url(#fabCore)"/>
+    <polygon points="11.5,19.8 32,32 32,56" fill="#006B03" fill-opacity="0.45"/>
+    <polygon points="32,4 56,18 56,46 32,60 8,46 8,18" fill="none" stroke="#FFFFFF" stroke-opacity="0.35" stroke-width="1.4"/>
+  </svg>
+  <span class="fab-label">Ask Agent</span>
+</button>
+
+<!-- ===================== Slide-Over Research Agent Drawer ===================== -->
+<div class="drawer-scrim" id="drawerScrim" aria-hidden="true"></div>
+<aside class="agent-drawer" id="agentDrawer" aria-label="Research Agent" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="drawer-title-wrap">
+      <span class="drawer-title">Research Agent</span>
+      <span class="drawer-badge">Gemini · Web</span>
+    </div>
+    <button type="button" class="icon-btn" id="closeAgentBtn" aria-label="Close Research Agent" title="Close (Esc)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
   </div>
-</footer>
+
+  <div class="drawer-body">
+    <p class="drawer-lede">Reads the full 6-month guide first, then searches the live web with Google Search and keeps the two clearly separated.</p>
+
+    <details class="key-panel" id="keyPanel" open>
+      <summary>
+        <span>Google AI API key</span>
+        <span class="key-status">
+          <span class="key-dot" id="keyDot"></span>
+          <span id="keyStatusText">Not set</span>
+        </span>
+      </summary>
+      <div class="key-inner">
+        <input type="password" id="apiKey" class="input-field" autocomplete="off" placeholder="Paste your Google AI API key">
+        <p class="field-note">Stored in this browser tab only (sessionStorage) and sent only to generativelanguage.googleapis.com.</p>
+      </div>
+    </details>
+
+    <div>
+      <label class="field-label" for="topic">Research topic</label>
+      <textarea id="topic" class="input-field" placeholder="Example: Current first-time buyer programs in California, or: how trigger leads work and how to stop them"></textarea>
+    </div>
+
+    <button id="runAgent" type="button" class="primary-btn" style="width: 100%;">Research this topic</button>
+
+    <div id="agentStatus" role="status"></div>
+    <div id="agentAnswer"></div>
+    <div id="agentSources"></div>
+  </div>
+</aside>
 
 <script>
 "use strict";
+
+/* ===================== Guide Context (Verbatim) ===================== */
 const GUIDE_CONTEXT = "# Homebuying Guide - 6 Months \u2014 Notion Content Dump\n\n- Source: Notion page \"Homebuying Guide - 6 Months\"\n- Root page id: 409f5361-4703-41fe-a84e-3094aa0dc8ff\n- Root page URL: https://app.notion.com/p/409f5361470341fea84e3094aa0dc8ff\n- Parent hub: \"Shrey the `Homeowner`\" (id 3fd18d5e-56f7-80e0-8add-fc28c7a39328)\n- Extracted: Nov 19, 2026, via notion-fetch. All 6 pages fetched successfully. No fetch failures.\n- Tree (original order, as linked from the root page):\n  1. Homebuying Guide - 6 Months \u2014 409f5361-4703-41fe-a84e-3094aa0dc8ff\n  2. Planning Phase (3 Months) \u2014 b859e3cd-3d5c-46b5-b1eb-418a6a3f40f4\n  3. Shopping Phase (2 Months) \u2014 eb966b5f-b3f3-44cb-8e2a-4f6583f77ea5\n  4. Closing Phase (1 Month) \u2014 22eecbb1-39a4-404d-a0e5-883deef25683\n  5. Additional Reading Resources \u2014 93687a85-461c-428f-85a8-ea9a0ad60797\n  6. Calculators & References \u2014 741b3ace-22cb-4d9e-870d-5a575df6e463\n- No page has deeper subpages. The only internal cross-link is inside Planning Phase (an anchor link to its own \"Trick\" block).\n- Note on Calculators & References: most links on that page are youtube.com/redirect links whose destinations are winthehouseyoulove.com pages. The redirect tokens were redacted in the fetch output, so the decoded destination URLs are recorded below alongside each label.\n\n---\n\n## 1. Homebuying Guide - 6 Months\n\n- Page id: 409f5361-4703-41fe-a84e-3094aa0dc8ff\n- Notion URL: https://app.notion.com/p/409f5361470341fea84e3094aa0dc8ff\n\n### 3 Rules for HomeBuying\n\n1. Plan to hold for 5 years or more\n   - **Why**: When home prices have dipped, that dip has been roughly about 5 years. That way you don't lose money.\n2. Be comfortable in your budget\n3. 3 months expenses saved\n\n### Videos on this page\n\n- First Time Home Buyer Q&A \u2192 https://www.youtube.com/watch?v=HfHNQWUoKdc\n- Watch: https://www.youtube.com/watch?v=CdZBMa0kJvA&t=753s\n\n### Subpages (in order)\n\n- Planning Phase (3 Months)\n- Shopping Phase (2 Months)\n- Closing Phase (1 Month)\n- Additional Reading Resources\n- Calculators & References\n\n### YouTube links on this page\n\n- https://www.youtube.com/watch?v=HfHNQWUoKdc (label: \"First Time Home Buyer Q&A\")\n- https://www.youtube.com/watch?v=CdZBMa0kJvA&t=753s (label: \"Watch\")\n\n---\n\n## 2. Planning Phase (3 Months)\n\n- Page id: b859e3cd-3d5c-46b5-b1eb-418a6a3f40f4\n- Notion URL: https://app.notion.com/p/b859e3cd3d5c46b5b1eb418a6a3f40f4\n\n### Day 1 - Write down your \"Why\"\n\n- Write it down on paper with your partner\n- Remind yourself why you're actually purchasing\n- Don't get swept up in FOMO\n- Without a why, budget creep will be high!\n- Examples: Want to be done with renting, Relocating because of Job or Family, Need more space due to a growing family, Need an office due to transitioning to WFH, Health reasons, More privacy, Schooldistricts that are preferred etc\n\n### Day 2 - Budget Clean-Up\n\n- Consider a budgeting software (what's coming in and what's going out on a monthly basis)\n- Trick to find a comfortable payment without a budget (internal anchor link on this page)\n- What is and isn't working?\n  - Is there a leak in your budget?\n  - Are you actually able to save?\n- Debt assessment - is now a good time to make a large purchase?\n\n### Day 3 - Guard Your Headspace\n\n- Consider where you want to get home buying news from, don't let it just come to you\n- Unsubscribe from channels, block accounts etc\n- Stick to your goals and only rely on news to actually gather info you're seeking\n  - Most news is out to making you afraid and fearful, so don't get swept away at that\n\n### Day 5 - 15 - Polish Your Credit\n\n- Doing this early will give you time to get your best score as quickly as possible\n- **Resource**: 10 day credit plan: EASY 10 DAY PLAN \u2014 How To Get A Perfe... \u2014 https://www.youtube.com/watch?v=AoSynOFmxnY&t=0s\n\n### Day 20 - Gather Your Documents\n\n- ID (DL, Passport)\n- Past 2 years:\n  - Tax Returns\n  - W2s/1099s\n- Recently monthly bank statements (or other accounts for down payment)\n- Most recent paystub (if applicable)\n- **Tip**: Put it in Google Drive (share to loan officer)\n\n### Day 22 - Prevent Spam Calls / Texts\n\n- (Trigger Leads) Credit Unions sell your information to other lenders - Can go to upto 50 or 70 calls a day!!\n- OptOutPrescreen.com \u2014 https://www.optoutprescreen.com/\n- DoNotCall.gov \u2014 https://www.donotcall.gov/\n\n### Day 25 - Talk With a Loan Officer\n\n- Schedule a call with us (Real Estate Agent - winthehouseyoulove)\n  - Licensed in all 50 states\n  - Consultation Call to find the best loan that makes sense for you\n  - 1 application, one credit pull, 70 lenders\n  - Federally Charted Bank through Allied First Bank\n- Verify what you can get approved for (before the loan officer)\n- See your rate, monthly payment, price range and est. out of pocket expenses\n\n### Day 26 - Create Your Targets\n\n- **Resource**: winthehouseyoulove.com/maxprice \u2014 https://www.winthehouseyoulove.com/tools/max-purchase-price-calculator\n  - Code: KYLE for 20% off\n\n| Target | Amount |\n| --- | --- |\n| Monthly Payment | $4,000 max |\n| Price Range | $1,200,000 max |\n| Cash To Close | $200k down + $30k closing |\n| Moving In | $5k moving budget |\n\n### Day 27 - Start Practice Payments (Stress Testing)\n\n- Act like you already have your mortgage payment (if higher)\n- Save the difference of your rent and est. mortgage payment into a savings account and don't touch it\n- See if the payment creates tension in your budget\n\n### Day 28 - Create Your Savings Plan\n\n- Practice Payments\n- **Example:**\n  - Needed - Saved = Remaining\n  - $18,000 (Needed) - $8,000 (Saved) = $10,000 (Remaining)\n  - $10,000 (Remaining) / 5 Months = $2,000/month (Savings Needed)\n\n### Day 30 - Dream, seriously\n\n- We need to do the full home buying dream thing so we can get to the realistic stuff without the baggage\n- Go to open houses for fun\n- Scroll, scroll, scroll (on Zillow)\n- Screenshot and make a folder of houses you love\n- Get it out of your system, feel through it\n- Get it out of your system and come back to what is practically feasible\n\n### Day 35 - Decide What You Want\n\n- Neighborhood research\n  - Walking\n  - Driving by at different times of day\n  - Talking to people in the community\n  - Safety, School Districts, Proximity to work\n- Open Houses\n- Create Needs / Wants List\n  - *Needs* need to accomplish why you're buying the house. Those are not negotiable\n  - *Wants* can be compromised on. How to solve for non-needs so that everyone is happy?\n  - What will you compromise on?\n  - Allow room to grow and expand - Sometimes first homes aren't what you always want. Second homes and third homes aligns more and more with what you want\n\n### Day 40 - Plan Your Exit\n\n- How will you get out of your lease?\n  - Make remaining payments\n  - Negotiate a buyout\n  - Have someone take over the lease\n- Will you sell or rent?\n  - Do you need money from the sale?\n  - Can you afford 2 mortgage payments?\n  - Will your offer be contingent?\n- Create a fallback plan if buying doesn't work out\n\n### Day 50 - Talk With A Real Estate Agent\n\n- **Resource**: winthehouseyoulove.com/agent \u2014 https://homeandmoney.com/kyle/\n- Agent will ask for a pre-qualification letter\n\n### Day 55 - Get A Home Inspector\n\n- You won't need them until you're under contract on a home\n- Get recommendations from your real estate agent\n- Explore online reviews\n\n### Day 60 - Organize Moving Logistics\n\n- Moving company - get quotes if needed\n- Recruit friends early and honestly (don't rope in the pickup truck guy)\n- Explore local truck rental options if needed\n- (When ready) Begin packing non-essentials early - do it in stages instead of the one TERRIBLE weekend\n\n### YouTube links on this page\n\n- https://www.youtube.com/watch?v=AoSynOFmxnY&t=0s (label: \"EASY 10 DAY PLAN \u2014 How To Get A Perfe...\" \u2014 the 10 day credit plan resource, Day 5 - 15)\n\n---\n\n## 3. Shopping Phase (2 Months)\n\n- Page id: eb966b5f-b3f3-44cb-8e2a-4f6583f77ea5\n- Notion URL: https://app.notion.com/p/eb966b5fb3f344cb8e2a4f6583f77ea5\n\n### Explore Homes\n\n- Talk with your agent about your entire situation\n  - Ask them \"how realistic is this?\"\n  - \"What might I compromise on?\"\n- Realistically look at homes online\n- Visit at least 3 open houses\n- Walk neighborhoods you're looking in and narrow the pockets you want to buy in\n- Schedule showings of homes you like\n\n### Review Comps (Comparable Homes)\n\n- Once you found a house you're super interested!\n- Have your agent \"pull comps\" to validate the value & structure an offer\n- Schedule showing with agent to see the home\n- (You're ready to take action at this stage because of all the prep)\n\n### Make An Offer\n\n- When you're ready!\n- This is called being \"under contract\"\n\n### YouTube links on this page\n\n- None.\n\n---\n\n## 4. Closing Phase (1 Month)\n\n- Page id: 22eecbb1-39a4-404d-a0e5-883deef25683\n- Notion URL: https://app.notion.com/p/22eecbb139a4404da0e5883deef25683\n\n| Stage | Responsible |\n| --- | --- |\n| Seller accepts your offer | Seller \\| Your Agent |\n| Initial docs & updated docs | Lender \\| You |\n| Home inspection | Home Inspector \\| Seller's Agent |\n| Title Search | Lender \\| Title Company |\n| Conditional approval | Lender |\n| Home Appraisal | Lender \\| Appraiser \\| Seller's Agent |\n| Arrange utility transfer | You |\n| Review Final Numbers | Lender \\| You |\n| Sign Final Docs (Closing) | Lender \\| You \\| Agent |\n| Move In | You |\n\n### Your First Payment\n\n- One full month gap minimum\n- Closing Date \u2192 First Payment\n- 3/2 \u2014\u2014\u2014\u2014\u2014\u2014\u2192 5/1\n- 6/16 \u2014\u2014\u2014\u2014\u2014\u2192 8/1\n- 8/28 \u2014\u2014\u2014\u2014\u2014> 10/1\n\n### YouTube links on this page\n\n- None.\n\n---\n\n## 5. Additional Reading Resources\n\n- Page id: 93687a85-461c-428f-85a8-ea9a0ad60797\n- Notion URL: https://app.notion.com/p/93687a85461c428f85a8ea9a0ad60797\n\n- Home buying guide: https://www.investopedia.com/homebuying-guide-4776300\n- Visual guide: https://www.car.org/marketdata/interactive/buyersguide\n- 10 things to know about buying in Bay Area: https://abioproperties.com/buying-tips/every-first-time-home-buyer-should-know-about-bay-area/\n- Buyers preparation checklist: https://docs.google.com/file/d/1GQxPRqOXx4RUfK6HOL9lxY6qUQhg-vVf/edit?usp=docslist_api&filetype=msword\n\n### YouTube links on this page\n\n- None.\n\n---\n\n## 6. Calculators & References\n\n- Page id: 741b3ace-22cb-4d9e-870d-5a575df6e463\n- Notion URL: https://app.notion.com/p/741b3ace22cb4d9e870d5a575df6e463\n\n- Get Pre-Approved With My Team \u2192 destination: https://www.winthehouseyoulove.com/lender (original link is a youtube.com/redirect link, token redacted in fetch)\n- Get An Agent Referral \u2192 destination: https://www.winthehouseyoulove.com/agent (original link is a youtube.com/redirect link, token redacted in fetch)\n- First Time Home Buyer Q&A \u2192 https://www.youtube.com/watch?v=HfHNQWUoKdc\n- \ud83d\udcc9 Today's Rates \u2192 destination: https://www.winthehouseyoulove.com/rates (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83c\udfe1 Max Purchase Price Calculator \u2192 destination: https://www.winthehouseyoulove.com/maxprice (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83d\udcca Loan Comparison Calculator \u2192 destination: https://www.winthehouseyoulove.com/advisor (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83d\udcc5 Complete Buying Timeline \u2192 destination: https://www.winthehouseyoulove.com/timeline (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83c\udf93 Lower Student Loan Payments \u2192 destination: https://www.winthehouseyoulove.com/student (original link is a youtube.com/redirect link, token redacted in fetch)\n- \ud83d\udcb3 Credit Score Simulator \u2192 destination: https://www.winthehouseyoulove.com/credit (original link is a youtube.com/redirect link, token redacted in fetch)\n\n### YouTube links on this page\n\n- https://www.youtube.com/watch?v=HfHNQWUoKdc (label: \"First Time Home Buyer Q&A\")\n- 8 youtube.com/redirect links (labels and decoded destinations listed above)\n\n---\n\n## Fetch failures\n\n- None. All 6 pages in the tree fetched successfully on the first attempt.\n";
 
+/* ===================== Theme Switcher (Curie Exact-Inverse) ===================== */
+const MOON_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="curie-icon-swap"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+const SUN_SVG = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="curie-icon-swap"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
+const themeBtns = [document.getElementById("themeToggleDesktop"), document.getElementById("themeToggleMobile")];
+
+function syncThemeIcons() {
+  const isDark = document.documentElement.classList.contains("dark");
+  themeBtns.forEach(btn => {
+    if (!btn) return;
+    btn.innerHTML = isDark ? SUN_SVG : MOON_SVG;
+    btn.setAttribute("aria-label", isDark ? "Switch to Light Mode" : "Switch to Dark Mode");
+  });
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", isDark ? "#090A0D" : "#FAFAFA");
+}
+
+function toggleTheme() {
+  document.documentElement.classList.add("theme-switching");
+  const isDark = document.documentElement.classList.toggle("dark");
+  document.documentElement.classList.toggle("theme-light", !isDark);
+  document.documentElement.style.backgroundColor = isDark ? "#090A0D" : "#FAFAFA";
+  try { localStorage.setItem("hb_theme_pick", isDark ? "dark" : "light"); } catch (e) {}
+  syncThemeIcons();
+  requestAnimationFrame(() => document.documentElement.classList.remove("theme-switching"));
+}
+
+themeBtns.forEach(btn => btn && btn.addEventListener("click", toggleTheme));
+syncThemeIcons();
+
+/* ===================== Checklist Progress (LocalStorage) ===================== */
+const STORAGE_KEY = "hb_checklist_v1";
+const stepCards = Array.from(document.querySelectorAll(".step-card"));
+const progressPct = document.getElementById("progressPct");
+const progressCount = document.getElementById("progressCount");
+const progressFill = document.getElementById("progressFill");
+const progressBar = document.getElementById("progressBar");
+const resetBtn = document.getElementById("resetProgress");
+let completed = new Set();
+
+try {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  if (Array.isArray(saved)) completed = new Set(saved);
+} catch (e) {}
+
+let activeFilter = "all";
+
+function updateChecklistUI() {
+  const total = stepCards.length;
+  let done = 0;
+  stepCards.forEach(card => {
+    const id = card.dataset.step;
+    const isDone = completed.has(id);
+    if (isDone) done++;
+    card.classList.toggle("is-done", isDone);
+    const cb = card.querySelector(".check-btn");
+    if (cb) cb.setAttribute("aria-checked", isDone ? "true" : "false");
+    // Apply Planning filter only to cards inside #planning
+    if (card.closest("#planning")) {
+      const hide = (activeFilter === "remaining" && isDone) || (activeFilter === "done" && !isDone);
+      card.classList.toggle("filtered-out", hide);
+    }
+  });
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  progressPct.textContent = pct + "%";
+  progressCount.textContent = done + " / " + total + " steps done";
+  progressFill.style.width = pct + "%";
+  progressFill.classList.toggle("all-done", pct === 100);
+  progressBar.setAttribute("aria-valuenow", String(pct));
+  resetBtn.classList.toggle("show", done > 0);
+}
+
+stepCards.forEach(card => {
+  const cb = card.querySelector(".check-btn");
+  if (!cb) return;
+  cb.addEventListener("click", () => {
+    const id = card.dataset.step;
+    if (completed.has(id)) completed.delete(id);
+    else completed.add(id);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(completed))); } catch (e) {}
+    updateChecklistUI();
+  });
+});
+
+resetBtn.addEventListener("click", () => {
+  completed.clear();
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  updateChecklistUI();
+});
+
+document.querySelectorAll(".seg-btn[data-filter]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll(".seg-btn[data-filter]").forEach(b => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
+    updateChecklistUI();
+  });
+});
+
+updateChecklistUI();
+
+/* ===================== Scrollspy for Nav Links ===================== */
+const sections = Array.from(document.querySelectorAll("section.page[id]"));
+const navLinks = Array.from(document.querySelectorAll("nav.desktop-nav a.nav-link, #mobileMenu a"));
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = "#" + entry.target.id;
+      navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === id));
+    }
+  });
+}, { rootMargin: "-20% 0px -65% 0px" });
+sections.forEach(s => observer.observe(s));
+
+/* ===================== Mobile Menu & Mobile Search ===================== */
+const menuBtn = document.getElementById("menuBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const mobileSearchBtn = document.getElementById("mobileSearchBtn");
+const mobileSearchBar = document.getElementById("mobileSearchBar");
+
+function closeMenu() {
+  mobileMenu.classList.remove("open");
+  menuBtn.setAttribute("aria-expanded", "false");
+}
+menuBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const open = mobileMenu.classList.toggle("open");
+  menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+});
+mobileMenu.querySelectorAll("a, button").forEach(el => el.addEventListener("click", closeMenu));
+document.addEventListener("click", (e) => {
+  if (!mobileMenu.contains(e.target) && e.target !== menuBtn) closeMenu();
+});
+
+mobileSearchBtn.addEventListener("click", () => {
+  const open = mobileSearchBar.classList.toggle("open");
+  mobileSearchBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  if (open) document.getElementById("mobileSearch").focus();
+});
+
+/* ===================== Quick Jump Search (Curie SymbolSearch style) ===================== */
+const searchIndex = [
+  ...stepCards.map(c => ({
+    title: c.querySelector(".card-title").textContent.trim(),
+    meta: c.querySelector(".day-badge").textContent.trim(),
+    href: "#" + c.id,
+    text: (c.dataset.search || "") + " " + c.textContent
+  })),
+  { title: "3 Rules for HomeBuying", meta: "OVERVIEW", href: "#overview", text: "3 rules 5 years budget 3 months expenses" },
+  { title: "Closing Phase Stage Table", meta: "CLOSING", href: "#closing", text: "closing stage table inspection title search appraisal closing docs" },
+  { title: "Your First Payment Date", meta: "CLOSING", href: "#first-payment", text: "first payment one full month gap closing date" },
+  { title: "Additional Reading Resources", meta: "READING", href: "#reading", text: "investopedia visual guide bay area checklist" },
+  { title: "Calculators & References", meta: "TOOLS", href: "#calculators", text: "pre-approved agent referral rates max purchase price loan comparison timeline student credit simulator" },
+];
+
+function bindSearch(inputEl, resultsEl, onPick) {
+  if (!inputEl || !resultsEl) return;
+  function render() {
+    const q = inputEl.value.trim().toLowerCase();
+    if (!q) { resultsEl.classList.remove("open"); resultsEl.innerHTML = ""; return; }
+    const hits = searchIndex.filter(it => (it.title + " " + it.meta + " " + it.text).toLowerCase().includes(q)).slice(0, 8);
+    if (!hits.length) {
+      resultsEl.innerHTML = '<div class="search-empty">No matching guide steps — try asking the Research Agent.</div>';
+    } else {
+      resultsEl.innerHTML = hits.map(h =>
+        '<a class="search-item" href="' + h.href + '"><span>' + escapeHtml(h.title) + '</span><span class="search-item-meta">' + escapeHtml(h.meta) + '</span></a>'
+      ).join("");
+      resultsEl.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+        resultsEl.classList.remove("open");
+        inputEl.value = "";
+        if (onPick) onPick();
+      }));
+    }
+    resultsEl.classList.add("open");
+  }
+  inputEl.addEventListener("input", render);
+  inputEl.addEventListener("focus", render);
+  document.addEventListener("click", (e) => {
+    if (!inputEl.parentElement.parentElement.contains(e.target)) resultsEl.classList.remove("open");
+  });
+}
+
+bindSearch(document.getElementById("desktopSearch"), document.getElementById("desktopSearchResults"));
+bindSearch(document.getElementById("mobileSearch"), document.getElementById("mobileSearchResults"), () => {
+  mobileSearchBar.classList.remove("open");
+  mobileSearchBtn.setAttribute("aria-expanded", "false");
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) {
+    const ds = document.getElementById("desktopSearch");
+    if (ds && ds.offsetParent !== null) {
+      e.preventDefault();
+      ds.focus();
+    }
+  } else if (e.key === "Escape") {
+    closeAgentDrawer();
+    closeMenu();
+  }
+});
+
+/* ===================== Slide-Over Research Agent Drawer ===================== */
+const agentDrawer = document.getElementById("agentDrawer");
+const drawerScrim = document.getElementById("drawerScrim");
+const closeAgentBtn = document.getElementById("closeAgentBtn");
 const keyInput = document.getElementById("apiKey");
+const keyPanel = document.getElementById("keyPanel");
+const keyDot = document.getElementById("keyDot");
+const keyStatusText = document.getElementById("keyStatusText");
 const topicInput = document.getElementById("topic");
 const runBtn = document.getElementById("runAgent");
 const statusEl = document.getElementById("agentStatus");
 const answerEl = document.getElementById("agentAnswer");
 const sourcesEl = document.getElementById("agentSources");
 
+function openAgentDrawer(prefillTopic) {
+  agentDrawer.classList.add("open");
+  agentDrawer.setAttribute("aria-hidden", "false");
+  drawerScrim.classList.add("open");
+  document.body.classList.add("agent-open");
+  if (window.innerWidth >= 1180) document.body.classList.add("agent-docked");
+  if (prefillTopic) {
+    topicInput.value = prefillTopic;
+  }
+  setTimeout(() => {
+    if (!serverKeyReady && !keyInput.value.trim()) { keyPanel.open = true; keyInput.focus(); }
+    else topicInput.focus();
+  }, 180);
+}
+
+function closeAgentDrawer() {
+  agentDrawer.classList.remove("open");
+  agentDrawer.setAttribute("aria-hidden", "true");
+  drawerScrim.classList.remove("open");
+  document.body.classList.remove("agent-open", "agent-docked");
+}
+
+document.querySelectorAll("[data-open-agent]").forEach(btn => {
+  btn.addEventListener("click", () => openAgentDrawer());
+});
+document.querySelectorAll("[data-ask]").forEach(btn => {
+  btn.addEventListener("click", () => openAgentDrawer(btn.dataset.ask));
+});
+closeAgentBtn.addEventListener("click", closeAgentDrawer);
+drawerScrim.addEventListener("click", closeAgentDrawer);
+window.addEventListener("resize", () => {
+  if (document.body.classList.contains("agent-open")) {
+    document.body.classList.toggle("agent-docked", window.innerWidth >= 1180);
+  }
+});
+
+/* API Key: auto-detect Vercel server key via /api/research, with optional sessionStorage override */
+let serverKeyReady = false;
+
+function syncKeyStatus() {
+  const hasLocal = Boolean(keyInput.value.trim());
+  if (serverKeyReady) {
+    keyDot.classList.add("ready");
+    keyStatusText.textContent = hasLocal ? "Using tab key" : "Vercel key ready";
+    keyPanel.open = false;
+  } else {
+    keyDot.classList.toggle("ready", hasLocal);
+    keyStatusText.textContent = hasLocal ? "Saved in tab" : "Not set";
+    if (hasLocal) keyPanel.open = false;
+  }
+}
+
 const savedKey = sessionStorage.getItem("googleAiApiKey");
 if (savedKey) keyInput.value = savedKey;
+syncKeyStatus();
+
+fetch("/api/research", { method: "GET" })
+  .then(r => r.ok ? r.json() : null)
+  .then(d => {
+    if (d && d.configured) {
+      serverKeyReady = true;
+      syncKeyStatus();
+    }
+  })
+  .catch(() => {});
+
 keyInput.addEventListener("change", () => {
   const v = keyInput.value.trim();
   if (v) sessionStorage.setItem("googleAiApiKey", v);
   else sessionStorage.removeItem("googleAiApiKey");
+  syncKeyStatus();
 });
 
 function escapeHtml(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function renderMarkdownLite(md) {
@@ -595,13 +2674,16 @@ function renderMarkdownLite(md) {
   const closeList = () => { if (listType) { html += listType === "ul" ? "</ul>" : "</ol>"; listType = null; } };
   const inline = (t) => {
     let out = escapeHtml(t);
+    out = out.replace(/`([^`]+)`/g, "<code>$1</code>");
     out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    out = out.replace(/(^|[^*])\*([^*]+)\*(?!\*)/g, "$1<em>$2</em>");
     out = out.replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     out = out.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
     return out;
   };
   for (const raw of lines) {
     const line = raw.trimEnd();
+    if (/^\s*[-*_]{3,}\s*$/.test(line)) { closeList(); html += "<hr>"; continue; }
     const h = line.match(/^(#{1,4})\s+(.*)$/);
     if (h) { closeList(); const lvl = Math.min(h[1].length + 1, 4); html += "<h" + lvl + ">" + inline(h[2]) + "</h" + lvl + ">"; continue; }
     const ul = line.match(/^\s*[-*]\s+(.*)$/);
@@ -646,54 +2728,112 @@ async function runResearch() {
   sourcesEl.innerHTML = "";
   answerEl.style.display = "none";
   answerEl.innerHTML = "";
-  if (!key) { statusEl.className = "error"; statusEl.textContent = "Enter your Google AI API key first."; return; }
-  if (!topic) { statusEl.className = "error"; statusEl.textContent = "Enter a research topic first."; return; }
-  sessionStorage.setItem("googleAiApiKey", key);
+  if (!serverKeyReady && !key) {
+    keyPanel.open = true;
+    keyInput.focus();
+    statusEl.className = "error";
+    statusEl.textContent = "Add GEMINI_API_KEY in Vercel or enter a Google AI API key above.";
+    return;
+  }
+  if (!topic) {
+    topicInput.focus();
+    statusEl.className = "error";
+    statusEl.textContent = "Enter a research topic first.";
+    return;
+  }
+  if (key) {
+    sessionStorage.setItem("googleAiApiKey", key);
+    syncKeyStatus();
+  }
   runBtn.disabled = true;
-  statusEl.textContent = "Researching… the agent reads the guide, searches the web, and writes the brief. This can take a minute.";
+  statusEl.innerHTML = '<span class="ag-spinner" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Researching… reading the guide and searching the live web.</span>';
   try {
-    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: buildPrompt(topic) }] }],
-        tools: [{ google_search: {} }]
-      })
-    });
-    if (!res.ok) {
-      let detail = "";
-      try { const e = await res.json(); detail = (e && e.error && e.error.message) || ""; } catch (_) {}
-      throw new Error("The Google AI request failed (HTTP " + res.status + ")" + (detail ? ": " + detail : ". Check the API key and try again."));
+    let text = "";
+    let links = [];
+    if (serverKeyReady) {
+      const res = await fetch("/api/research", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: buildPrompt(topic), apiKey: key || undefined })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Research request failed (HTTP " + res.status + ").");
+      text = (data.text || "").trim();
+      links = Array.isArray(data.sources) ? data.sources : [];
+    } else {
+      const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: buildPrompt(topic) }] }],
+          tools: [{ google_search: {} }]
+        })
+      });
+      if (!res.ok) {
+        let detail = "";
+        try { const e = await res.json(); detail = (e && e.error && e.error.message) || ""; } catch (_) {}
+        throw new Error("The Google AI request failed (HTTP " + res.status + ")" + (detail ? ": " + detail : ". Check the API key and try again."));
+      }
+      const data = await res.json();
+      const cand = data && data.candidates && data.candidates[0];
+      const parts = (cand && cand.content && cand.content.parts) || [];
+      text = parts.map(p => p.text || "").join("\n").trim();
+      const chunks = (cand && cand.groundingMetadata && cand.groundingMetadata.groundingChunks) || [];
+      const seen = new Set();
+      for (const c of chunks) {
+        const web = c && c.web;
+        if (web && web.uri && !seen.has(web.uri)) {
+          seen.add(web.uri);
+          links.push({ title: web.title || web.uri, uri: web.uri });
+        }
+      }
     }
-    const data = await res.json();
-    const cand = data && data.candidates && data.candidates[0];
-    const parts = (cand && cand.content && cand.content.parts) || [];
-    const text = parts.map(p => p.text || "").join("\n").trim();
     if (!text) throw new Error("The agent returned an empty answer. Try again, or rephrase the topic.");
     answerEl.innerHTML = renderMarkdownLite(text);
     answerEl.style.display = "block";
-    const chunks = (cand.groundingMetadata && cand.groundingMetadata.groundingChunks) || [];
-    const seen = new Set();
-    const links = [];
-    for (const c of chunks) {
-      const web = c && c.web;
-      if (web && web.uri && !seen.has(web.uri)) { seen.add(web.uri); links.push(web); }
-    }
     if (links.length) {
-      sourcesEl.innerHTML = "<strong>Sources:</strong><br>" + links.map(w =>
-        '<a href="' + escapeHtml(w.uri) + '" target="_blank" rel="noopener">' + escapeHtml(w.title || w.uri) + "</a>"
-      ).join("<br>");
+      sourcesEl.innerHTML = '<div class="field-label" style="margin-top:4px;margin-bottom:2px;">Grounded Sources</div>' + links.map(w =>
+        '<a class="source-chip" href="' + escapeHtml(w.uri) + '" target="_blank" rel="noopener"><span>' + escapeHtml(w.title || w.uri) + '</span><span>↗</span></a>'
+      ).join("");
     }
-    statusEl.textContent = "Done. The brief separates guide guidance from fresh research.";
+    statusEl.textContent = "Done. Guide guidance and fresh research are separated below.";
   } catch (err) {
     statusEl.className = "error";
-    statusEl.textContent = "The research agent could not finish. " + (err && err.message ? err.message : "Check your connection and try again.");
+    statusEl.textContent = "Could not finish. " + (err && err.message ? err.message : "Check your connection and try again.");
   } finally {
     runBtn.disabled = false;
   }
 }
 
 runBtn.addEventListener("click", runResearch);
+
+/* ===================== PWA: Service Worker & Android Chrome Install Prompt ===================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => {});
+  });
+}
+
+let deferredInstallPrompt = null;
+const installAppBtn = document.getElementById("installAppBtn");
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if (installAppBtn) installAppBtn.style.display = "flex";
+});
+if (installAppBtn) {
+  installAppBtn.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    try { await deferredInstallPrompt.userChoice; } catch (_) {}
+    deferredInstallPrompt = null;
+    installAppBtn.style.display = "none";
+  });
+}
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  if (installAppBtn) installAppBtn.style.display = "none";
+});
 </script>
 </body>
 </html>
